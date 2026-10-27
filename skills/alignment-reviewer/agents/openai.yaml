@@ -1,0 +1,4 @@
+interface:
+  display_name: "Alignment Reviewer"
+  short_description: "Check question-answer alignment to source"
+  default_prompt: "Use $alignment-reviewer to review the question and answer against the source."

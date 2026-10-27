@@ -1,0 +1,4 @@
+interface:
+  display_name: "Answer Generator"
+  short_description: "Write source-grounded answers for learning notes"
+  default_prompt: "Use $answer-generator to answer the question from the provided source material in note-ready form."

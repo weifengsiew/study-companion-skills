@@ -1,0 +1,4 @@
+interface:
+  display_name: "Scope Reviewer"
+  short_description: "Check questions and answers for matching scope"
+  default_prompt: "Use $scope-reviewer to check whether each question and answer cover the same concepts."

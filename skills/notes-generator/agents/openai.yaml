@@ -1,0 +1,4 @@
+interface:
+  display_name: "Notes Generator"
+  short_description: "Generate aligned learning notes by subsection"
+  default_prompt: "Use $notes-generator to create per-subsection notes from the provided source material."

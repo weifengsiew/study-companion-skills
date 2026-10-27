@@ -1,0 +1,4 @@
+interface:
+  display_name: "Question Generator"
+  short_description: "Create source-grounded learning questions"
+  default_prompt: "Use $question-generator to create a learning question from the provided source material."

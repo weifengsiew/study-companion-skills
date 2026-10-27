@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "learning-skills",
+  "version": "0.1.0",
+  "description": "Source-grounded note generation and interactive teaching workflows.",
+  "author": {
+    "name": "Siew Wei Feng"
+  },
+  "license": "MIT",
+  "repository": "https://gitlab.aisingapore.net/siew_weifeng/learning-skills"
+}

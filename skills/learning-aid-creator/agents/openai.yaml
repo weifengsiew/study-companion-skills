@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learning Aid Creator"
+  short_description: "Add source-grounded learning aids"
+  default_prompt: "Use $learning-aid-creator to add a suitable learning aid to this explanation."
