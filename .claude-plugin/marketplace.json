@@ -1,0 +1,18 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "study-companion-skills",
+  "description": "Source-grounded study notes and adaptive tutoring for Claude Code.",
+  "owner": {
+    "name": "Siew Wei Feng"
+  },
+  "plugins": [
+    {
+      "name": "study-companion-skills",
+      "source": {
+        "source": "github",
+        "repo": "weifengsiew/study-companion-skills"
+      },
+      "description": "Generate source-grounded learning notes and run adaptive study sessions."
+    }
+  ]
+}

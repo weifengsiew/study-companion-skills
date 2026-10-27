@@ -1,14 +1,14 @@
-# Learning Skills
+# Study Companion Skills
 
-A cross-compatible collection of Codex and Claude Code skills for generating source-grounded learning notes and running persistent, interactive study sessions.
+Turn source material into reviewed notes, then study with an adaptive tutor that tracks your progress.
 
 ## Turn your source material into active learning
 
-Reading something is not the same as understanding it—and a summary alone cannot tell you what you can actually explain, remember, or apply. Learning Skills turns a textbook chapter, article, course handout, or technical document into a structured study path, then guides you through it as an adaptive tutor.
+Reading something is not the same as understanding it—and a summary alone cannot tell you what you can actually explain, remember, or apply. Study Companion Skills turns a textbook chapter, article, course handout, or technical document into a structured study path, then guides you through it as an adaptive tutor.
 
 The package combines two main workflows. `notes-generator` transforms your source into focused questions, source-grounded answers, and learning aids. `teach-me` then uses those notes and the original source to teach in small steps, test your understanding, respond to gaps, and remember where you stopped so your next session can pick up from there.
 
-Use Learning Skills when you want:
+Use Study Companion Skills when you want:
 
 - **Study notes built for understanding:** your source material becomes clear explanations, focused questions, and learning aids while staying grounded in the original source.
 - **Active learning, not passive rereading:** the tutor first teaches each concept, then assesses your understanding through retrieval, explanation, comparison, diagnosis, and application.
@@ -69,22 +69,41 @@ Install the complete collection because the two main workflows delegate work to 
 
 ## Install in Codex
 
-Clone the repository and copy each skill into your personal Codex skills directory:
+In Codex, ask:
+
+```text
+Install all skills from https://github.com/weifengsiew/study-companion-skills into my personal Codex skills directory (~/.agents/skills). If a skill with the same name is already installed, leave it untouched and tell me. Codex should detect the new skills automatically; if it does not, tell me to restart Codex.
+```
+
+Or install them manually in a terminal by cloning the repository and copying its skills:
 
 ```bash
-git clone https://gitlab.aisingapore.net/siew_weifeng/learning-skills.git
-mkdir -p ~/.codex/skills
-for skill in learning-skills/skills/*; do
-  destination="$HOME/.codex/skills/$(basename "$skill")"
+git clone https://github.com/weifengsiew/study-companion-skills.git
+mkdir -p ~/.agents/skills
+for skill in study-companion-skills/skills/*; do
+  destination="$HOME/.agents/skills/$(basename "$skill")"
   if [ -e "$destination" ]; then
-    printf 'Skipped existing skill: %s\n' "$destination"
+    printf 'Skipped existing skill: %s\n' "$(basename "$skill")"
   else
     cp -R "$skill" "$destination"
   fi
 done
 ```
 
-The script does not overwrite existing skills. Start a new Codex session after installation so all ten skills are discovered.
+Codex detects skill changes automatically. If the new skills do not appear, restart Codex.
+
+### Update in Codex
+
+From the directory containing your clone, pull the latest changes and copy them into your Codex skills directory. This replaces files for skills from this collection:
+
+```bash
+git -C study-companion-skills pull
+for skill in study-companion-skills/skills/*; do
+  destination="$HOME/.agents/skills/$(basename "$skill")"
+  mkdir -p "$destination"
+  cp -R "$skill/." "$destination/"
+done
+```
 
 ### Use in Codex
 
@@ -102,43 +121,58 @@ Use $teach-me with source <source-path> and notes <notes-path>.
 
 ## Install in Claude Code
 
-Claude Code can load the repository as one plugin. Clone it, then choose either a temporary or persistent installation.
+In Claude Code, ask:
+
+```text
+Install Study Companion Skills from the GitHub repository weifengsiew/study-companion-skills as a user plugin, so it is available in all my projects. Add its marketplace if needed, then confirm that the plugin is enabled.
+```
+
+Or install it from your terminal:
+
+```bash
+claude plugin marketplace add weifengsiew/study-companion-skills
+claude plugin install study-companion-skills@study-companion-skills --scope user
+```
 
 ### Load for one session
 
-```bash
-git clone https://gitlab.aisingapore.net/siew_weifeng/learning-skills.git
-claude --plugin-dir ./learning-skills
-```
-
-### Load in every session
+To try the plugin for one session without installing it:
 
 ```bash
-mkdir -p ~/.claude/skills
-git clone https://gitlab.aisingapore.net/siew_weifeng/learning-skills.git ~/.claude/skills/learning-skills
+git clone https://github.com/weifengsiew/study-companion-skills.git
+claude --plugin-dir ./study-companion-skills
 ```
 
-Start a new Claude Code session after cloning. If a session is already open, run `/reload-plugins`.
+If Claude Code is already open, run `/reload-plugins` to load the plugin. Otherwise, it loads the next time you start Claude Code.
 
 ### Use in Claude Code
 
-Skills installed through the plugin are namespaced with `learning-skills`:
+Skills installed through the plugin are namespaced with `study-companion-skills`:
 
 ```text
-/learning-skills:notes-generator Turn <source-path> into learning notes.
+/study-companion-skills:notes-generator Turn <source-path> into learning notes.
 ```
 
 ```text
-/learning-skills:teach-me Use source <source-path> and notes <notes-path>.
+/study-companion-skills:teach-me Use source <source-path> and notes <notes-path>.
 ```
 
 Claude can also select a skill automatically when the request matches its description.
 
+### Update in Claude Code
+
+Third-party marketplaces have automatic updates turned off by default. To update the plugin from your terminal, run:
+
+```bash
+claude plugin update study-companion-skills@study-companion-skills
+```
+
 ## Repository structure
 
 ```text
-learning-skills/
+study-companion-skills/
 ├── .claude-plugin/
+│   ├── marketplace.json
 │   └── plugin.json
 ├── plugin.json
 └── skills/
@@ -157,10 +191,10 @@ Validate a skill with the validator bundled with Codex's `skill-creator`:
 python /path/to/skill-creator/scripts/quick_validate.py skills/teach-me
 ```
 
-Validate the complete Claude Code plugin when Claude Code is installed:
+Validate the Claude Code plugin and marketplace when Claude Code is installed:
 
 ```bash
-claude plugin validate . --strict
+claude plugin validate .
 ```
 
 Test direct, indirect, incomplete, negative, and edge-case prompts before publishing changes.
