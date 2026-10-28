@@ -1,45 +1,62 @@
 # Study Companion Skills
 
-Turn source material into reviewed notes, then study with an adaptive tutor that tracks your progress.
+**Stop just reading. Start understanding.**
 
-## Turn your source material into active learning
+Turn textbooks, articles, course materials, and technical documents into reviewed study notes—then learn with an adaptive AI tutor that teaches, tests your understanding, and remembers your progress.
 
-Reading something is not the same as understanding it—and a summary alone cannot tell you what you can actually explain, remember, or apply. Study Companion Skills turns a textbook chapter, article, course handout, or technical document into a structured study path, then guides you through it as an adaptive tutor.
+## From passive reading to active learning
 
-The package combines two main workflows. `notes-generator` transforms your source into focused questions, source-grounded answers, and learning aids. `teach-me` then uses those notes and the original source to teach in small steps, test your understanding, respond to gaps, and remember where you stopped so your next session can pick up from there.
+Reading something isn't the same as understanding it. And a summary alone can't tell you what you can actually explain, remember, or apply.
 
-Use Study Companion Skills when you want:
+**Study Companion Skills combines two skills to bridge that gap:**
 
-- **Study notes built for understanding:** your source material becomes clear explanations, focused questions, and learning aids while staying grounded in the original source.
-- **Active learning, not passive rereading:** the tutor first teaches each concept, then assesses your understanding through retrieval, explanation, comparison, diagnosis, and application.
-- **Teaching that adapts to you:** the tutor adjusts its explanations and questions based on what you understand and where you need more support.
-- **Learning that improves your notes:** as you work through the material, the tutor can propose clearer explanations for your approval, helping your study notes evolve around your needs.
-- **Progress that carries across sessions:** your concept coverage, answers, assessments, and next question are saved so you can continue where you stopped.
+- **`notes-generator` — Turn your sources into study-ready notes.** Creates focused questions, source-grounded answers, and useful learning aids for every learning objective, with multiple review passes to improve quality.
+- **`teach-me` — Learn with an adaptive tutor.** Teaches concepts in manageable steps, tests your understanding, identifies knowledge gaps, and adjusts its explanations and questions based on your responses.
 
-## How to use the skills
+**What makes it different?**
 
-1. Put the material you want to learn in a file the assistant can access.
-2. Run `notes-generator` with the source path. Unless you provide another notes path, it saves the matching study notes to `source_dir/notes/<source-stem>-notes.md`. If suitable notes already exist, you can skip this step.
-3. Run `teach-me` with the exact source and notes paths reported by `notes-generator`.
-4. Learn one manageable concept group at a time. Answer the tutor's questions, ask for clarification, request another example, or pause when needed.
-5. Return later and resume from the saved progress file instead of reconstructing your place.
+- **Active learning, not passive rereading.** Test your ability to recall, explain, compare, diagnose, and apply what you've learned.
+- **Teaching that adapts to you.** Get simpler explanations, alternative approaches, and targeted follow-up questions when you're struggling.
+- **Notes that evolve with your understanding.** Your tutor can propose clearer explanations for your approval, without silently rewriting your notes.
+- **Progress that carries across sessions.** Your concept coverage, assessments, and next question are saved so you can pick up exactly where you left off.
 
-The installation sections below provide the exact commands and prompts for Codex and Claude Code.
+**The goal isn't just better notes. It's knowing what you truly understand—and what you still need to learn.**
 
-## What you will experience
+## Install with one prompt
 
-First, note generation deliberately works through the source in order. For every learning objective, it creates a focused question, an answer, and a useful learning aid, then subjects the draft to multiple review passes. This can take some time. Before it begins, `notes-generator` asks you to confirm that you are using an advanced model with the strongest available reasoning or effort setting.
+Ready to turn your next reading into an interactive learning experience?
 
-Next, `teach-me` turns those notes into a conversation rather than a long lecture. The tutor explains a small group of concepts, asks a focused question that lets you demonstrate your understanding, evaluates your response against the notes and source, and adjusts what happens next. If an idea has not landed, the tutor can simplify it, approach it differently, or ask a more targeted follow-up before moving on.
+**Choose your AI coding assistant, copy the prompt, and let it handle the installation.**
 
-After each session, you leave with more than a transcript:
+### Claude Code
 
-- a record of which concepts were covered, tested, or still remain;
-- feedback that distinguishes solid understanding from specific gaps;
-- a pending question and saved position for the next session; and
-- reviewed notes that stay under your control.
+Paste this into Claude Code:
 
-If the tutoring conversation produces a clearer explanation than the current notes, you will see the proposed change and choose whether to accept it. The package never silently rewrites your notes.
+```text
+Install Study Companion Skills from the GitHub repository weifengsiew/study-companion-skills as a user plugin, so it is available in all my projects. Add its marketplace if needed, then confirm that the plugin is enabled.
+```
+
+### Codex
+
+Paste this into Codex:
+
+```text
+Install all skills from https://github.com/weifengsiew/study-companion-skills into my personal Codex skills directory. If a skill with the same name is already installed, leave it untouched and tell me. Codex should detect the new skills automatically; if it does not, tell me to restart Codex.
+```
+
+### Start learning
+
+Once installed, turn your source material into an interactive learning experience:
+
+1. **Choose your material.** Put the textbook chapter, article, course handout, or document you want to study in a file your assistant can access.
+2. **Generate your study notes.** Run `notes-generator` with the source file path. By default, it saves the reviewed notes to `source_dir/notes/<source-stem>-notes.md`. If suitable notes already exist, you can skip this step.
+3. **Start your tutoring session.** Run `teach-me` with the exact source and notes paths reported by `notes-generator` (or the paths to your existing notes).
+4. **Learn at your own pace.** Work through one manageable concept group at a time. Answer questions, ask for clarification, request examples, or pause whenever you need.
+5. **Pick up where you left off.** Return later and resume from your saved progress file without starting over.
+
+**Note:** `notes-generator` performs multiple review passes, so note generation can take some time. Before starting, it asks you to confirm that you're using an advanced model with the strongest available reasoning setting.
+
+**Install Study Companion Skills and turn your next reading session into real learning.**
 
 ## Included skills
 
