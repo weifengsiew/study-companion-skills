@@ -18,7 +18,7 @@ Save the completed notes to that path. When finished, tell the learner the exact
 
 ## From source to notes
 
-Process the source one section at a time, preserving its hierarchy and order. Within each section, process its subsections in source order. Assign one primary subagent to each subsection and give it only that subsection's source material. That subagent identifies the subsection's learning objectives and creates one question, one answer, and one generated learning aid, plus any essential source-provided aids, for each objective. Use separate subagents for the required reviews. Process subsections and reviews in batches when capacity is limited. For each subsection, invoke the following available skills by name in this order. Prefer copies bundled with the current package when present; do not require a particular installation path:
+Divide the source into three to five contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, run the nine-step workflow below in the stated order, with the primary performing the creation steps and separate reviewer subagents performing the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Afterward, review the assembled notes for gaps, duplication, consistency, and cross-part relationships. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
 
 1. `question-generator` — the primary subagent creates one focused question per objective.
 2. `answer-generator` — the same primary subagent creates one answer per objective.
