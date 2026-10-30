@@ -18,7 +18,7 @@ Save the completed notes to that path. When finished, tell the learner the exact
 
 ## From source to notes
 
-Divide the source into three to five contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, run the nine-step workflow below in the stated order, with the primary performing the creation steps and separate reviewer subagents performing the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Afterward, review the assembled notes for gaps, duplication, consistency, and cross-part relationships. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
+Divide the source into two to three contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, run the nine-step workflow below in the stated order, with the primary performing the creation steps and separate reviewer subagents performing the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Afterward, review the assembled notes for gaps, duplication, consistency, and cross-part relationships. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
 
 1. `question-generator` — the primary subagent creates one focused question per objective.
 2. `answer-generator` — the same primary subagent creates one answer per objective.
