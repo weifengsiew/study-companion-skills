@@ -13,7 +13,7 @@ Find the exact source material at `source_dir/<source-name>` and its matching no
 
 - If either exact path is unknown, ask the learner to specify it.
 - If the source path is known but the source is absent, ask the learner to place the source material there. Do not attempt note generation without the source.
-- If the source exists but the notes are absent, invoke the available `notes-generator` skill using the host's skill-invocation syntax. Tell the learner that note generation will pause until they confirm they are using an advanced model with the strongest available reasoning or effort setting, as required by that skill. Return to setup after the notes file has been created, using the exact notes path reported by `notes-generator`.
+- If the source exists but the notes are absent, invoke the available `notes-generator` skill using the host's skill-invocation syntax. Return to setup after the notes file has been created, using the exact notes path reported by `notes-generator`.
 - If both files exist, inform the learner of both exact paths and continue.
 
 Never generate notes directly within `teach-me`.
@@ -36,4 +36,6 @@ Use `teaching-loop` skill for all live instruction, including explanations, clar
 
 ## 4. Manage note updates
 
-After `teaching-loop` closes a lesson chunk or resolves a clarification, use an independent subagent to compare the final explanation with the corresponding notes subsection and relevant source material. Prefer it only if it is clearer than in the notes, while remaining accurate, complete, and within scope. If it is better, show the proposed edit location in the notes, original wording vs edited wording. Edit only if the user gives explicit confirmation. Otherwise, leave the notes unchanged.
+After a clarification or substantially adapted explanation, ask: "Is that clear, or should I explain it another way?" Continue teaching if further clarification is needed.
+
+Once the learner confirms the explanation is clear, compare it with the corresponding notes and source if it materially differs from the notes. If it is clearer while remaining accurate, complete, and within scope, show the proposed edit location and original versus edited wording. Edit only with the learner's explicit confirmation. Use an independent subagent only for complex or cross-subsection changes.

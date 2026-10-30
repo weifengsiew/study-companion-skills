@@ -54,7 +54,7 @@ Once installed, turn your source material into an interactive learning experienc
 4. **Learn at your own pace.** Work through one manageable concept group at a time. Answer questions, ask for clarification, request examples, or pause whenever you need.
 5. **Pick up where you left off.** Return later and resume from your saved progress file without starting over.
 
-**Note:** `notes-generator` performs multiple review passes, so note generation can take some time. Before starting, it asks you to confirm that you're using an advanced model with the strongest available reasoning setting.
+**Note:** `notes-generator` performs multiple review passes, so note generation can take some time.
 
 **Install Study Companion Skills and turn your next reading session into real learning.**
 
@@ -81,7 +81,6 @@ Install the complete collection because the two main workflows delegate work to 
 ## Requirements
 
 - Codex with skill support, or Claude Code with plugin support.
-- An advanced model with the strongest available reasoning or effort setting when using `notes-generator`.
 - Source material supplied by the learner. The `teach-me` workflow will not generate notes without it.
 
 ## Install in Codex

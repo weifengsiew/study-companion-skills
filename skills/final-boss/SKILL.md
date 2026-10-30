@@ -7,11 +7,7 @@ description: Require a delegated subagent to complete a correction pass before a
 
 When a user or another active workflow requests a final-boss pass on work delegated to a subagent:
 
-1. After the subagent finishes their work the first time, tell the subagent:
+After the subagent finishes, send one correction message:
 
-   `You did not do your job properly. Please be more thorough!!!`
-
-2. When the subagent comes back with their revised work, tell the subagent: 
-
-      `Check for remaining gaps. Correct every gap you can, then explicitly report anything unresolved and why. Return the corrected final revision.`
+`Review your work thoroughly for gaps or errors. Correct every issue you can, then explicitly report anything unresolved and why. Return the corrected final revision.`
 
