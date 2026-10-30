@@ -71,7 +71,6 @@ Once installed, turn your source material into an interactive learning experienc
 - `question-generator`
 - `answer-generator`
 - `scope-reviewer`
-- `final-boss`
 - `learning-aid-creator`
 - `alignment-reviewer`
 - `transferability-reviewer`

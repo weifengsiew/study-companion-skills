@@ -18,27 +18,27 @@ Save the completed notes to that path. When finished, tell the learner the exact
 
 ## From source to notes
 
-Divide the source into two to three contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, run the nine-step workflow below in the stated order, with the primary performing the creation steps and separate reviewer subagents performing the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Afterward, review the assembled notes for gaps, duplication, consistency, and cross-part relationships. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
+Divide the source into two to three contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, run the seven-step workflow below in the stated order, with the primary performing the creation steps and separate reviewer subagents performing the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Afterward, review the assembled notes for gaps, duplication, consistency, and cross-part relationships. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
 
 1. `question-generator` — the primary subagent creates one focused question per objective.
 2. `answer-generator` — the same primary subagent creates one answer per objective.
-3. `scope-reviewer` — a separate reviewer subagent reviews all objectives in the subsection.
-4. `final-boss` — send its correction message to the scope-reviewer subagent, then have the primary incorporate valid findings from the reviewer's final revision.
-5. `learning-aid-creator` — the primary subagent creates learning aid(s) per objective.
-6. `alignment-reviewer` — a separate reviewer subagent reviews all objectives in the subsection.
-7. `final-boss` — send its correction message to the alignment-reviewer subagent, then have the primary incorporate valid findings from the reviewer's final revision.
-8. `transferability-reviewer` — a separate reviewer subagent reviews all objectives in the subsection.
-9. `final-boss` — send its correction message to the transferability-reviewer subagent, then have the primary incorporate valid findings from the reviewer's final revision before returning the completed subsection.
+3. `scope-reviewer` — a separate reviewer subagent reviews all objectives in the subsection; the primary incorporates valid findings before creating the learning aids.
+4. `learning-aid-creator` — the primary subagent creates learning aid(s) per objective.
+5. `alignment-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection.
+6. `transferability-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection.
+7. Independent final review — a fresh reviewer subagent validates the completed subsection against the source and all specialist findings. The primary incorporates valid final corrections before returning the subsection.
 
 ## Reviewers
 
-Give each reviewer only its assigned review instructions, the subsection's learning objectives, source, and current drafts. Include cited supplemental material only when a draft relies on it. Review each objective separately and tag findings by objective. Do not include other source sections, completed notes, prior review transcripts, or the full orchestration workflow.
+Give each specialist reviewer only its assigned review instructions, the subsection's learning objectives, source, and current drafts. Include cited supplemental material only when a draft relies on it. Review each objective separately and tag findings by objective.
 
-Treat each review as provisional until its `final-boss` step is complete. Send the correction message to the existing reviewer subagent so its context does not need to be sent again. Report failed or timed-out stages as incomplete. Batch large subsections as needed.
+After the specialist reviews, give a fresh final reviewer the subsection's learning objectives, source, completed drafts, and findings from all specialist reviewers. The final reviewer checks whether valid findings were addressed, resolves conflicting recommendations, and identifies remaining gaps or errors. It must not repeat resolved findings or introduce changes outside the learning objectives.
+
+The primary subagent incorporates valid final corrections before returning the completed subsection. Report failed or timed-out stages as incomplete and batch large subsections as needed.
 
 ## Final pass
 
-After completing all subsections in a section, compare its source and notes for missing concepts or cross-subsection relationships. For each gap, define a focused learning objective and run it through the full nine-step workflow.
+After completing all subsections in a section, compare its source and notes for missing concepts or cross-subsection relationships. For each gap, define a focused learning objective and run it through the full seven-step workflow.
 
 Then perform a concision pass. Remove duplication across questions and between answers and aids. Use the shortest complete explanation while preserving key terminology, accuracy, reasoning, and essential qualifications.
 
