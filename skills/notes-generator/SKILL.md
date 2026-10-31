@@ -50,4 +50,6 @@ Begin the notes with a concise `Big picture` section explaining the source's cen
 
 After the `Big picture`, include a concise, source-wide `Practical takeaway`. Drawing on the source as a whole and without repeating details covered later in the notes, synthesize when and why its concepts are useful in practice, the decisions they inform, and the actions they enable. Use a high-level workflow, decision matrix, checklist, or a combination of these formats, selecting only what best communicates the practical overview.
 
+In `Big picture` and `Practical takeaway`, link major points to the relevant detailed sections using valid internal Markdown links.
+
 Then output the remaining notes in source order: heading (same as the source material), `Question`, and answer, with each learning aid embedded directly after its general principle.
