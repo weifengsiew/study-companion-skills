@@ -7,10 +7,8 @@ description: Create a concise, source-wide orientation that explains what learni
 
 Use the source map, completed detailed notes, and heading-anchor index to create the opening `Big picture` section. Consult only targeted source excerpts when these inputs cannot support or verify a point.
 
-Structure the `Big picture` as: (1) a framing paragraph that introduces the central subject and its significance; (2) a compact map of the source's major themes or questions, with links to the relevant details; and (3) a concluding synthesis explaining how those themes relate and why they should be understood together. Derive the structure from the source rather than imposing a fixed number of themes or a predetermined workflow.
+Give a concise map of the source's main ideas and how they relate. Frame the central subject, identify the major themes or questions, and synthesize why they should be understood together. Derive the structure from the source rather than imposing a fixed number of themes or a predetermined workflow.
 
-Keep the entire section high-level. Synthesize across the source, omitting definitions, mechanisms, examples, and other details that belong in the detailed notes.
-
-Link major points to the relevant detailed note sections using valid internal Markdown links. Use descriptive link text and exact heading anchors.
+Keep the entire section high-level and easy to scan. Omit definitions, mechanisms, examples, procedural steps, internal links, and other details that belong later in the notes.
 
 Return only the complete `Big picture` section.

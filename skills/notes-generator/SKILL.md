@@ -56,6 +56,6 @@ After completing the detailed notes, invoke `big-picture-generator`, then `pract
 
 ## Output format
 
-Place their returned sections at the beginning of the notes in this order: `Big picture`, then `Practical takeaway`. Verify that their internal Markdown links resolve to the intended detailed headings.
+Place their returned sections at the beginning of the notes in this order: `Big picture`, then `Practical takeaway`. Keep the `Big picture` free of internal links; verify that links in the practical takeaway resolve to the intended detailed headings.
 
 Then output the remaining notes in source order: heading (same as the source material), `Question`, and answer, with each learning aid embedded directly after its general principle.
