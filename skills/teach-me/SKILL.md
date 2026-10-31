@@ -30,12 +30,20 @@ Create `source_dir/notes/progress/<notes-stem>-progress.json` if it does not exi
 
 Update the progress file after every learner response, clarification, or note change.
 
-## 3. Use tutoring skill
+## 3. Load teaching preferences
 
-Use `teaching-loop` skill for all live instruction, including explanations, clarifications, questions, assessment, adaptation, pacing, and instructional state. Use notes to teach concepts, source material to supply illustrative examples and progress json to track and update progress.
+Invoke the available `teach-me-preference-manager` skill using the host's skill-invocation syntax and load confirmed preferences relevant to the current session. Continue without them if the profile is unavailable. Current learner instructions and source accuracy take precedence.
 
-## 4. Manage note updates
+## 4. Use tutoring skill
+
+Use `teaching-loop` skill for all live instruction, including explanations, clarifications, questions, assessment, adaptation, pacing, and instructional state. Pass it the relevant confirmed preferences. Use notes to teach concepts, source material to supply illustrative examples and progress json to track and update progress.
+
+## 5. Manage note updates
 
 After a clarification or substantially adapted explanation, ask: "Is that clear, or should I explain it another way?" Continue teaching if further clarification is needed.
 
 Once the learner confirms that an adapted explanation is clear, compare it with the corresponding notes and source. If it materially differs while remaining accurate, complete, and within scope, favor proposing the adapted explanation as a replacement. Show the edit location and original versus proposed wording, and edit only with the learner's explicit confirmation. Use an independent subagent only for complex or cross-subsection changes.
+
+## 6. End session
+
+When the learner explicitly pauses or ends the session, save progress first, then invoke `teach-me-preference-manager` to propose preference changes. Save only confirmed changes. Failure or refusal to update preferences must not prevent the session from ending.
