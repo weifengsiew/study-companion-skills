@@ -15,7 +15,7 @@ Read the question and answer. Identify the concept structure and generate one su
 | Worked numerical example | A formula or calculation needs demonstration |
 | Worked code example | An abstract idea appears in implementation |
 | Concept/dependency map | Relationships or prerequisites matter |
-| Example–counterexample | Boundaries or misconceptions need clarification |
+| Weak–improved example | A weak example and its improved version clarify quality criteria and how to apply them |
 | Annotated plot/visual | Trends, distributions, or visual patterns matter |
 
 Use Markdown tables for comparisons, Mermaid for diagrams, and fenced Python for code examples. Treat the supplied source as primary. Authoritative external sources may provide supplemental support, but cite and label them as supplemental, and do not silently replace or contradict the supplied source. Avoid decorative visuals and repetition.

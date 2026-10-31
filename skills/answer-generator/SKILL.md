@@ -29,8 +29,7 @@ Use compact Markdown in this order:
 
 ### 3. Source-specific example (when useful)
 
-- Provide an example from the supplied source that clearly illustrates the general principle.
-- Keep this section under 1.2 times the length of the general principle; omit it if it adds no understanding.
+- Describe in one sentence a source-specific example that illustrates the general principle, and cite the exact source section, subsection, page, or other available locator.
 
 ## Style and Accuracy
 
