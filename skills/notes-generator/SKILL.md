@@ -7,22 +7,22 @@ description: Create per-subsection learning notes by orchestrating question, ans
 
 ## Load learning preferences
 
-Invoke the available `learning-preference-manager` skill using the host's skill-invocation syntax and load confirmed `shared` and `notes` preferences before generating or revising notes. Continue without them if the profile is unavailable. Apply the preference precedence defined by the manager, and pass relevant preferences to each creation or review stage they affect.
+Using the host's invocation syntax, invoke `learning-preference-manager` and load confirmed `shared` and `notes` preferences before generating or revising notes. Continue if unavailable. Apply the manager's precedence and pass relevant preferences to affected creation and review stages.
 
 ## Notes path
 
 Determine the matching notes path before processing the source:
 
-- Use the notes path supplied by the learner when one is provided.
+- Use the learner-supplied notes path when provided.
 - Otherwise, use `source_dir/notes/<source-stem>-notes.md`, where `source_dir` contains the source and `<source-stem>` is the source filename without its final extension.
 - Create the `notes/` directory when needed.
 - If the target file already exists, do not replace it without the learner's explicit confirmation.
 
-Save the completed notes to that path. When finished, tell the learner the exact source and notes paths and explain that `teach-me` will use those same paths to start or resume an interactive study session. If the notes cannot be saved, state that clearly instead of implying that the file exists.
+Save the completed notes there. Report the exact source and notes paths and explain that `teach-me` uses them to start or resume a study session. If saving fails, say so rather than implying the file exists.
 
 ## From source to notes
 
-Before dividing the source, identify its central purpose or question, major parts, and important relationships. Use this source map as shared context throughout note generation. Then divide the source into two to three contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, the primary identifies its distinct learning objectives, then runs the seven-step workflow below in the stated order, performing the creation steps while separate reviewer subagents perform the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
+Before dividing the source, map its central purpose or question, major parts, and important relationships. Use this map throughout generation. Divide the source into two or three contiguous parts at natural section or subsection boundaries; never split a subsection. Assign each part one primary subagent to process its subsections in source order. For each subsection, the primary identifies distinct learning objectives and runs the ordered seven-step workflow, performing creation while separate subagents perform reviews. Keep subsections as distinct outputs and batch when capacity is limited. Prefer bundled copies of named skills when present; require no installation path:
 
 1. `question-generator` — the primary subagent creates one focused question per objective.
 2. `answer-generator` — the same primary subagent creates one answer per objective.
@@ -36,20 +36,24 @@ Before dividing the source, identify its central purpose or question, major part
 
 Give each specialist reviewer only its assigned review instructions, the subsection's learning objectives, relevant source-map context, source, and current drafts. Include cited supplemental material only when a draft relies on it. Review each objective separately and tag findings by objective.
 
-After the specialist reviews, give a fresh final reviewer the subsection's learning objectives, source, completed drafts, and findings from all specialist reviewers. The final reviewer checks whether valid findings were addressed, resolves conflicting recommendations, and identifies remaining gaps or errors. It must not repeat resolved findings or introduce changes outside the learning objectives.
+After specialist reviews, give a fresh final reviewer the objectives, source, completed drafts, and all specialist findings. It checks that valid findings were addressed, resolves conflicts, and identifies remaining gaps or errors without repeating resolved findings or exceeding the objectives.
 
-The primary subagent incorporates valid final corrections before returning the completed subsection. Report failed or timed-out stages as incomplete and batch large subsections as needed.
+The primary incorporates valid final corrections before returning the subsection. Report failed or timed-out stages as incomplete; batch large subsections as needed.
 
-## Final pass
+## Completeness pass
 
 After completing all subsections, compare the source map, source, and notes for missing concepts or relationships within and across sections. For each gap, define a focused learning objective and run it through the full seven-step workflow.
 
-Then perform a concision pass. Remove duplication across questions and between answers and aids. Use the shortest complete explanation while preserving key terminology, accuracy, reasoning, and essential qualifications.
+## Deduplication pass
 
-Begin the notes with a concise `Big picture` section explaining the source's central purpose, what its major parts cover, how they relate, and how the topic fits into the broader subject.
+Perform a deduplication pass: remove duplication across questions and between answers and aids. 
 
-After the `Big picture`, include a concise, source-wide `Practical takeaway`. Drawing on the source as a whole and without repeating details covered later in the notes, synthesize when and why its concepts are useful in practice, the decisions they inform, and the actions they enable. Use a high-level workflow, decision matrix, checklist, or a combination of these formats, selecting only what best communicates the practical overview.
+## Big picture and practical takeaways
 
-In `Big picture` and `Practical takeaway`, link major points to the relevant detailed sections using valid internal Markdown links.
+After completing the detailed notes, invoke `big-picture-generator`, then `practical-takeaway-generator`, with the source map, source, and completed notes. Prefer bundled copies when present; require no installation path.
+
+## Output format
+
+Place their returned sections at the beginning of the notes in this order: `Big picture`, then `Practical takeaway`. Verify that their internal Markdown links resolve to the intended detailed headings.
 
 Then output the remaining notes in source order: heading (same as the source material), `Question`, and answer, with each learning aid embedded directly after its general principle.

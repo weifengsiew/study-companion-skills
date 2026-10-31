@@ -8,10 +8,11 @@ Turn textbooks, articles, course materials, and technical documents into reviewe
 
 Reading something isn't the same as understanding it. And a summary alone can't tell you what you can actually explain, remember, or apply.
 
-**Study Companion Skills combines two skills to bridge that gap:**
+**Study Companion Skills combines three main workflows to bridge that gap:**
 
-- **`notes-generator` — Turn your sources into study-ready notes.** Creates focused questions, source-grounded answers, and useful learning aids for every learning objective, with multiple review passes to improve quality.
+- **`notes-generator` — Turn your sources into study-ready notes.** Creates reviewed, source-grounded notes with a big-picture orientation, practical takeaway, focused questions, explanatory answers, and useful learning aids.
 - **`teach-me` — Learn with an adaptive tutor.** Teaches concepts in manageable steps, tests your understanding, identifies knowledge gaps, and adjusts its explanations and questions based on your responses.
+- **`quiz-me` — Test what you understand.** Runs a question-first assessment, identifies knowledge gaps, and explains only what needs improvement.
 
 **What makes it different?**
 
@@ -76,6 +77,8 @@ Once installed, turn your source material into an interactive learning experienc
 - `answer-generator`
 - `scope-reviewer`
 - `learning-aid-creator`
+- `big-picture-generator`
+- `practical-takeaway-generator`
 - `alignment-reviewer`
 - `transferability-reviewer`
 
