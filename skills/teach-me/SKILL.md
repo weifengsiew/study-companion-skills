@@ -38,4 +38,4 @@ Use `teaching-loop` skill for all live instruction, including explanations, clar
 
 After a clarification or substantially adapted explanation, ask: "Is that clear, or should I explain it another way?" Continue teaching if further clarification is needed.
 
-Once the learner confirms the explanation is clear, compare it with the corresponding notes and source if it materially differs from the notes. If it is clearer while remaining accurate, complete, and within scope, show the proposed edit location and original versus edited wording. Edit only with the learner's explicit confirmation. Use an independent subagent only for complex or cross-subsection changes.
+Once the learner confirms that an adapted explanation is clear, compare it with the corresponding notes and source. If it materially differs while remaining accurate, complete, and within scope, favor proposing the adapted explanation as a replacement. Show the edit location and original versus proposed wording, and edit only with the learner's explicit confirmation. Use an independent subagent only for complex or cross-subsection changes.
