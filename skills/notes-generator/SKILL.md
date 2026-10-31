@@ -46,4 +46,8 @@ After completing all subsections, compare the source map, source, and notes for 
 
 Then perform a concision pass. Remove duplication across questions and between answers and aids. Use the shortest complete explanation while preserving key terminology, accuracy, reasoning, and essential qualifications.
 
-Begin the notes with a concise `Big picture` section explaining the source's central purpose, major parts, and how they relate. Then output the remaining notes in source order: heading (same as the source material), `Question`, and answer, with each learning aid embedded directly after its general principle.
+Begin the notes with a concise `Big picture` section explaining the source's central purpose, what its major parts cover, how they relate, and how the topic fits into the broader subject.
+
+After the `Big picture`, include a concise `Practical takeaway`. Without repeating details covered later in the notes, synthesize when and why the source's concepts are useful in practice, the decisions they inform, and the actions they enable. Present this as a brief narrative, high-level workflow, decision matrix, or checklist—whichever provides the clearest overview.
+
+Then output the remaining notes in source order: heading (same as the source material), `Question`, and answer, with each learning aid embedded directly after its general principle.
