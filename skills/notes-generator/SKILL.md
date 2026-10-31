@@ -5,6 +5,10 @@ description: Create per-subsection learning notes by orchestrating question, ans
 
 # Notes Generator
 
+## Load learning preferences
+
+Invoke the available `learning-preference-manager` skill using the host's skill-invocation syntax and load confirmed `shared` and `notes` preferences before generating or revising notes. Continue without them if the profile is unavailable. Apply the preference precedence defined by the manager, and pass relevant preferences to each creation or review stage they affect.
+
 ## Notes path
 
 Determine the matching notes path before processing the source:

@@ -1,4 +1,0 @@
-interface:
-  display_name: "Teach Me Preference Manager"
-  short_description: "Manage reusable teaching preferences"
-  default_prompt: "Use $teach-me-preference-manager to load or update my confirmed teaching preferences."

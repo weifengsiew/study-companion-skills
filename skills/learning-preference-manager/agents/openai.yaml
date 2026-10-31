@@ -1,0 +1,4 @@
+interface:
+  display_name: "Learning Preference Manager"
+  short_description: "Manage reusable notes and teaching preferences"
+  default_prompt: "Use $learning-preference-manager to load or update my confirmed learning preferences."

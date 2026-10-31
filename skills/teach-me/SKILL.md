@@ -30,9 +30,9 @@ Create `source_dir/notes/progress/<notes-stem>-progress.json` if it does not exi
 
 Update the progress file after every learner response, clarification, or note change.
 
-## 3. Load teaching preferences
+## 3. Load learning preferences
 
-Invoke the available `teach-me-preference-manager` skill using the host's skill-invocation syntax and load confirmed preferences relevant to the current session. Continue without them if the profile is unavailable. Current learner instructions and source accuracy take precedence.
+Invoke the available `learning-preference-manager` skill using the host's skill-invocation syntax and load confirmed `shared` and `teaching` preferences relevant to the current session. Continue without them if the profile is unavailable. Apply the preference precedence defined by the manager.
 
 ## 4. Use tutoring skill
 
@@ -46,4 +46,4 @@ Once the learner confirms that an adapted explanation is clear, compare it with 
 
 ## 6. End session
 
-When the learner explicitly pauses or ends the session, save progress first, then invoke `teach-me-preference-manager` to propose preference changes. Save only confirmed changes. Failure or refusal to update preferences must not prevent the session from ending.
+When the learner explicitly pauses or ends the session, save progress first, then invoke `learning-preference-manager` to propose preference changes. Save only confirmed changes. Failure or refusal to update preferences must not prevent the session from ending.

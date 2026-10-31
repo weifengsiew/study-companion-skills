@@ -68,7 +68,7 @@ Once installed, turn your source material into an interactive learning experienc
 ### Supporting workflows
 
 - `teaching-loop`
-- `teach-me-preference-manager`
+- `learning-preference-manager`
 - `question-generator`
 - `answer-generator`
 - `scope-reviewer`
