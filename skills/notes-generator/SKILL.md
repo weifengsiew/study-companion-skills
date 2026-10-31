@@ -18,14 +18,14 @@ Save the completed notes to that path. When finished, tell the learner the exact
 
 ## From source to notes
 
-Divide the source into two to three contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, run the seven-step workflow below in the stated order, with the primary performing the creation steps and separate reviewer subagents performing the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Afterward, review the assembled notes for gaps, duplication, consistency, and cross-part relationships. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
+Divide the source into two to three contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, the primary identifies its distinct learning objectives, then runs the seven-step workflow below in the stated order, performing the creation steps while separate reviewer subagents perform the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
 
 1. `question-generator` — the primary subagent creates one focused question per objective.
 2. `answer-generator` — the same primary subagent creates one answer per objective.
 3. `scope-reviewer` — a separate reviewer subagent reviews all objectives in the subsection; the primary incorporates valid findings before creating the learning aids.
 4. `learning-aid-creator` — the primary subagent creates learning aid(s) per objective.
-5. `alignment-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection.
-6. `transferability-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection.
+5. `alignment-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection; the primary incorporates valid findings before continuing.
+6. `transferability-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection; the primary incorporates valid findings before final review.
 7. Independent final review — a fresh reviewer subagent validates the completed subsection against the source and all specialist findings. The primary incorporates valid final corrections before returning the subsection.
 
 ## Reviewers
