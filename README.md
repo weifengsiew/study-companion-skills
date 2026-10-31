@@ -63,11 +63,14 @@ Once installed, turn your source material into an interactive learning experienc
 ### Main workflows
 
 - `teach-me` sets up a persistent study session from source material and matching notes.
+- `quiz-me` sets up a persistent question-first assessment session and explains identified gaps.
 - `notes-generator` creates reviewed learning notes from source material, subsection by subsection.
 
 ### Supporting workflows
 
-- `teaching-loop`
+- `teach-loop`
+- `quiz-loop`
+- `study-session-manager`
 - `learning-preference-manager`
 - `question-generator`
 - `answer-generator`
@@ -76,7 +79,7 @@ Once installed, turn your source material into an interactive learning experienc
 - `alignment-reviewer`
 - `transferability-reviewer`
 
-Install the complete collection because the two main workflows delegate work to the supporting skills.
+Install the complete collection because the main workflows delegate work to the supporting skills.
 
 ## Requirements
 

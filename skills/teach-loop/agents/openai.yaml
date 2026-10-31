@@ -1,0 +1,4 @@
+interface:
+  display_name: "Teach Loop"
+  short_description: "Teach in chunks and adapt to learner gaps"
+  default_prompt: "Use $teach-loop to teach this material through short explanations, targeted questions, and adaptive follow-ups."

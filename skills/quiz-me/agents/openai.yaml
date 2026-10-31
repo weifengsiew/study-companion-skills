@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quiz Me"
+  short_description: "Assess knowledge before explaining gaps"
+  default_prompt: "Use $quiz-me to quiz me from the provided source material and explain only what I miss."

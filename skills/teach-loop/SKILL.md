@@ -1,15 +1,15 @@
 ---
-name: teaching-loop
+name: teach-loop
 description: Teach interactively from source-grounded notes in small chunks, checking understanding and adapting instruction. Use for guided learning rather than one-shot explanations.
 ---
 
-# Teaching Loop
+# Teach Loop
 
 Use the notes as the primary teaching explanation and sequence. Consult the source to corroborate factual claims and provide supporting examples. If the notes conflict with the source, flag the disagreement and do not present the disputed note as established fact.
 
 If the notes do not answer a question, say so before explaining from the source. Distinguish supported claims from inference or illustration, and cite relevant subsections, pages, or passages when useful.
 
-## Teaching loop
+## Teach loop
 
 1. **Plan:** Select one coherent concept group small enough to explain or apply in a short paragraph. Split broader topics unless the notes treat them as inseparable.
 2. **Orient:** Before teaching a new unit of material, briefly situate it within the larger subject: identify the broader goal, question, or process it contributes to; explain why it matters; and connect it to relevant prior or upcoming material.

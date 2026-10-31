@@ -25,7 +25,7 @@ Store preferences as plain strings under exactly three top-level sections, witho
 
 ## Load preferences
 
-Return `shared` and `notes` preferences to `notes-generator`. Return `shared` and `teaching` preferences to `teach-me`. When preferences conflict, apply them in this order: current learner instructions; source accuracy and mandatory skill requirements; the relevant context-specific preference; shared preferences; default behavior.
+Return `shared` and `notes` preferences to `notes-generator`. Return `shared` and `teaching` preferences to `teach-me` or `quiz-me`. When preferences conflict, apply them in this order: current learner instructions; source accuracy and mandatory skill requirements; the relevant context-specific preference; shared preferences; default behavior.
 
 ## Update preferences
 

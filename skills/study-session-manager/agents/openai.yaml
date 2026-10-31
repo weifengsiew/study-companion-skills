@@ -1,0 +1,4 @@
+interface:
+  display_name: "Study Session Manager"
+  short_description: "Manage shared study session lifecycle"
+  default_prompt: "Use $study-session-manager to manage setup, progress, preferences, note updates, and ending for this study session."

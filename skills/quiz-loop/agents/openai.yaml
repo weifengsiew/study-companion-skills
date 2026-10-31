@@ -1,0 +1,4 @@
+interface:
+  display_name: "Quiz Loop"
+  short_description: "Assess first and explain identified gaps"
+  default_prompt: "Use $quiz-loop to assess this material before explaining gaps in my understanding."
