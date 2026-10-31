@@ -22,7 +22,7 @@ Save the completed notes to that path. When finished, tell the learner the exact
 
 ## From source to notes
 
-Divide the source into two to three contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, the primary identifies its distinct learning objectives, then runs the seven-step workflow below in the stated order, performing the creation steps while separate reviewer subagents perform the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
+Before dividing the source, identify its central purpose or question, major parts, and important relationships. Use this source map as shared context throughout note generation. Then divide the source into two to three contiguous parts along natural section or subsection boundaries, without splitting subsections. Assign one primary subagent to each part to process its subsections in source order. For each subsection, the primary identifies its distinct learning objectives, then runs the seven-step workflow below in the stated order, performing the creation steps while separate reviewer subagents perform the required reviews. Keep subsections as distinct output units and batch work when capacity is limited. Prefer copies of the named skills bundled with the current package when present; do not require a particular installation path:
 
 1. `question-generator` — the primary subagent creates one focused question per objective.
 2. `answer-generator` — the same primary subagent creates one answer per objective.
@@ -34,7 +34,7 @@ Divide the source into two to three contiguous parts along natural section or su
 
 ## Reviewers
 
-Give each specialist reviewer only its assigned review instructions, the subsection's learning objectives, source, and current drafts. Include cited supplemental material only when a draft relies on it. Review each objective separately and tag findings by objective.
+Give each specialist reviewer only its assigned review instructions, the subsection's learning objectives, relevant source-map context, source, and current drafts. Include cited supplemental material only when a draft relies on it. Review each objective separately and tag findings by objective.
 
 After the specialist reviews, give a fresh final reviewer the subsection's learning objectives, source, completed drafts, and findings from all specialist reviewers. The final reviewer checks whether valid findings were addressed, resolves conflicting recommendations, and identifies remaining gaps or errors. It must not repeat resolved findings or introduce changes outside the learning objectives.
 
@@ -42,8 +42,8 @@ The primary subagent incorporates valid final corrections before returning the c
 
 ## Final pass
 
-After completing all subsections in a section, compare its source and notes for missing concepts or cross-subsection relationships. For each gap, define a focused learning objective and run it through the full seven-step workflow.
+After completing all subsections, compare the source map, source, and notes for missing concepts or relationships within and across sections. For each gap, define a focused learning objective and run it through the full seven-step workflow.
 
 Then perform a concision pass. Remove duplication across questions and between answers and aids. Use the shortest complete explanation while preserving key terminology, accuracy, reasoning, and essential qualifications.
 
-Output notes in source order: heading (same as the source material), `Question`, answer, and learning aid(s).
+Begin the notes with a concise `Big picture` section explaining the source's central purpose, major parts, and how they relate. Then output the remaining notes in source order: heading (same as the source material), `Question`, answer, and learning aid(s).
