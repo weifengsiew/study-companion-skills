@@ -5,7 +5,7 @@ description: Teach interactively from source-grounded notes in small chunks, che
 
 # Teach Loop
 
-Use the notes as the primary teaching explanation and sequence. Consult the source to corroborate factual claims and provide supporting examples. If the notes conflict with the source, flag the disagreement and do not present the disputed note as established fact.
+Use the relevant loaded note sections as the primary teaching explanation and sequence. Load only the current concept group and compact session state by default. Consult targeted source excerpts to corroborate claims or provide examples; retrieve other sections only when advancing or answering a cross-topic question. If the notes conflict with the source, flag the disagreement and do not present the disputed note as established fact.
 
 If the notes do not answer a question, say so before explaining from the source. Distinguish supported claims from inference or illustration, and cite relevant subsections, pages, or passages when useful.
 

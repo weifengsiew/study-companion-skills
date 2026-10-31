@@ -5,7 +5,7 @@ description: Create a concise, source-wide practical takeaway from completed lea
 
 # Practical Takeaway Generator
 
-Use the source map, source material, and completed detailed notes to create the opening `Practical takeaway` section.
+Use the source map, completed detailed notes, and heading-anchor index to create the opening `Practical takeaway` section. Consult only targeted source excerpts when these inputs cannot support or verify a point.
 
 Synthesize when and why the source's concepts are useful in practice, the decisions they inform, and the actions they enable. Draw on the source as a whole without repeating granular explanations from the detailed notes.
 

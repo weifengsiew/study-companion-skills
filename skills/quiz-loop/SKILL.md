@@ -5,7 +5,7 @@ description: Assess interactively from source-grounded notes before explaining, 
 
 # Quiz Loop
 
-Use the notes as the primary basis for assessment, explanation, and sequence. Consult the source to corroborate factual claims and provide supporting examples. If the notes conflict with the source, flag the disagreement and do not present the disputed note as established fact.
+Use the relevant loaded note sections as the primary basis for assessment, explanation, and sequence. Load only the current concept group and compact session state by default. Consult targeted source excerpts to corroborate claims or provide examples; retrieve other sections only when advancing or a question spans topics. If the notes conflict with the source, flag the disagreement and do not present the disputed note as established fact.
 
 If the notes do not answer a question, say so before explaining from the source. Distinguish supported claims from inference or illustration, and cite relevant subsections, pages, or passages when useful.
 

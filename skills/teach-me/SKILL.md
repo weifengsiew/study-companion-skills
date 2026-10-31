@@ -13,4 +13,4 @@ Use `study-session-manager` for session setup, progress persistence, preference 
 
 ## 2. Use tutoring skill
 
-Use `teach-loop` skill for all live instruction, including explanations, clarifications, questions, assessment, adaptation, pacing, and instructional state. Pass it the relevant confirmed preferences. Use notes to teach concepts, source material to supply illustrative examples and progress json to track and update progress.
+Use `teach-loop` for all live instruction, including explanations, clarifications, questions, assessment, adaptation, pacing, and instructional state. Pass relevant confirmed preferences. For each turn, load only the current concept group's note sections, targeted source excerpts needed for corroboration or examples, and compact progress state. Retrieve more only when the learner advances or asks a cross-topic question.

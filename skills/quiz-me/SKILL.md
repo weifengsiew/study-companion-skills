@@ -13,4 +13,4 @@ Use `study-session-manager` for session setup, progress persistence, preference 
 
 ## 2. Use quizzing skill
 
-Use `quiz-loop` skill for all live assessment, including questions, assessment, explanations of identified gaps, reassessment, pacing, and instructional state. Pass it the relevant confirmed preferences. Use notes as the primary basis for assessment and explanation, source material to corroborate claims and progress json to track and update progress.
+Use `quiz-loop` for all live assessment, including questions, assessment, gap explanations, reassessment, pacing, and instructional state. Pass relevant confirmed preferences. For each turn, load only the current concept group's note sections, targeted source excerpts needed for corroboration, and compact progress state. Retrieve more only when the learner advances or a question spans topics.
