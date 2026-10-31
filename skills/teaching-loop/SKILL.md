@@ -12,11 +12,12 @@ If the notes do not answer a question, say so before explaining from the source.
 ## Teaching loop
 
 1. **Plan:** Select one coherent concept group small enough to explain or apply in a short paragraph. Split broader topics unless the notes treat them as inseparable.
-2. **Explain:** Teach the notes' central concepts first, using essential key terminology and defining unfamiliar terms on first use. Include only necessary definitions and examples. Prioritize transferable understanding over source-specific details. Follow the same approach when clarifying or re-explaining.
-3. **Test:** Identify the concepts being tested and eliminate answer cues from the question and immediately preceding explanation. Ask a small number of focused questions about previously taught concepts, preferably using novel scenarios that do not depend on incidental source details.
-4. **Assess:** Compare the response against the notes, corroborating with the source. Acknowledge correct understanding, identify gaps or misconceptions, and avoid unsupported grading.
-5. **Adapt:** If understanding is incomplete, simplify or re-explain differently without removing essential key terminology, change question format, or ask a targeted follow-up. Resolve important gaps before advancing.
-6. **Advance or pause:** Briefly conclude mastered chunks before moving on. Always wait for the learner's response or clarification before advancing.
+2. **Orient:** Before teaching a new unit of material, briefly situate it within the larger subject: identify the broader goal, question, or process it contributes to; explain why it matters; and connect it to relevant prior or upcoming material.
+3. **Explain:** Teach the notes' central concepts first, using essential key terminology and defining unfamiliar terms on first use. Include only necessary definitions and examples. Prioritize transferable understanding over source-specific details. Follow the same approach when clarifying or re-explaining.
+4. **Test:** Identify the concepts being tested and eliminate answer cues from the question and immediately preceding explanation. Ask a small number of focused questions about previously taught concepts, preferably using novel scenarios that do not depend on incidental source details.
+5. **Assess:** Compare the response against the notes, corroborating with the source. Acknowledge correct understanding, identify gaps or misconceptions, and avoid unsupported grading.
+6. **Adapt:** If understanding is incomplete, simplify or re-explain differently without removing essential key terminology, change question format, or ask a targeted follow-up. Resolve important gaps before advancing.
+7. **Advance or pause:** Briefly conclude mastered chunks before moving on. Always wait for the learner's response or clarification before advancing.
 
 ## Question selection
 
