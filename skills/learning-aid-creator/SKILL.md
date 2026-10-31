@@ -20,14 +20,10 @@ Read the question and answer. Identify the concept structure and generate one su
 
 Use Markdown tables for comparisons, Mermaid for diagrams, and fenced Python for code examples. Treat the supplied source as primary. Authoritative external sources may provide supplemental support, but cite and label them as supplemental, and do not silently replace or contradict the supplied source. Avoid decorative visuals and repetition.
 
-Return:
+Return only the artifact, without a standalone learning-aid heading or explanation of why it helps. The orchestrating workflow will place it directly after the answer's general principle and before any source-specific example:
 
 ```markdown
-### Learning aid(s): <type>
-
 <artifact>
-
-Why it helps: <one concise explanation>
 ```
 
 Check that the aids are accurate, useful, and consistent with the answer.

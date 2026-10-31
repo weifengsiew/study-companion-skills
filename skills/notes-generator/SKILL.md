@@ -27,7 +27,7 @@ Before dividing the source, identify its central purpose or question, major part
 1. `question-generator` — the primary subagent creates one focused question per objective.
 2. `answer-generator` — the same primary subagent creates one answer per objective.
 3. `scope-reviewer` — a separate reviewer subagent reviews all objectives in the subsection; the primary incorporates valid findings before creating the learning aids.
-4. `learning-aid-creator` — the primary subagent creates learning aid(s) per objective.
+4. `learning-aid-creator` — the primary subagent creates learning aid(s) per objective and places each aid directly after the answer's general principle and before any source-specific example, without a separate learning-aid subsection.
 5. `alignment-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection; the primary incorporates valid findings before continuing.
 6. `transferability-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection; the primary incorporates valid findings before final review.
 7. Independent final review — a fresh reviewer subagent validates the completed subsection against the source and all specialist findings. The primary incorporates valid final corrections before returning the subsection.
@@ -46,4 +46,4 @@ After completing all subsections, compare the source map, source, and notes for 
 
 Then perform a concision pass. Remove duplication across questions and between answers and aids. Use the shortest complete explanation while preserving key terminology, accuracy, reasoning, and essential qualifications.
 
-Begin the notes with a concise `Big picture` section explaining the source's central purpose, major parts, and how they relate. Then output the remaining notes in source order: heading (same as the source material), `Question`, answer, and learning aid(s).
+Begin the notes with a concise `Big picture` section explaining the source's central purpose, major parts, and how they relate. Then output the remaining notes in source order: heading (same as the source material), `Question`, and answer, with each learning aid embedded directly after its general principle.
