@@ -18,7 +18,7 @@ Reading something isn't the same as understanding it. And a summary alone can't 
 
 - **Active learning, not passive rereading.** Test your ability to recall, explain, compare, diagnose, and apply what you've learned.
 - **Teaching that adapts to you.** Get simpler explanations, alternative approaches, and targeted follow-up questions when you're struggling.
-- **Notes that evolve with your understanding.** Your tutor can propose clearer explanations for your approval, without silently rewriting your notes.
+- **Notes that evolve with your understanding.** During `teach-me`, after every three mastered concept groups, your tutor compares confirmed explanations with your notes and proposes worthwhile improvements for your approval.
 - **Progress that carries across sessions.** Your concept coverage, assessments, and next question are saved so you can pick up exactly where you left off.
 
 **The goal isn't just better notes. It's knowing what you truly understand—and what you still need to learn.**

@@ -1,6 +1,6 @@
 ---
 name: study-session-manager
-description: Internal lifecycle support for teach-me and quiz-me. Manage study-session setup, progress, preferences, note updates, and ending when delegated or explicitly invoked.
+description: Internal lifecycle support for teach-me and quiz-me. Manage shared sessions and teach-me note updates when delegated or explicitly invoked.
 ---
 
 # Study Session Manager
@@ -25,11 +25,12 @@ Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<not
 1. `source` — source path.
 2. `notes` — matching notes path.
 3. `current_chunk` — current subsection, status, and pending question.
-4. `concept_coverage` — required, tested, and remaining concepts.
+4. `concept_coverage` — required, tested, mastered, and remaining concept groups.
 5. `assessment_history` — learner answers and assessment results.
 6. `session_preferences` — the current assessment emphasis and response format.
+7. `note_review_queue` — teach-me groups awaiting note review, with each learning objective, note location, and any final confirmed explanation; quiz-me leaves this unchanged.
 
-Update the progress file after every learner response, clarification, or note change.
+Update the progress file after every learner response, clarification, concept-group completion, note review, or note change.
 
 ## 3. Load learning preferences
 
@@ -44,11 +45,17 @@ At the start of every session, ask the learner to choose:
 
 Do not substitute saved preferences for this prompt. If the current request specifies either choice, use it and ask only for what is missing. These are session, not permanent learning, preferences. Save them in `session_preferences`, return and apply them throughout the session, and allow changes at any time. On resumption, ask again and replace the prior choices.
 
-## 5. Manage note updates
+## 5. Manage teach-me note updates
 
-After an initial or substantially adapted explanation, ask: "Is that clear, or should I explain it another way?" Continue explaining if further clarification is needed.
+Run this section only for `teach-me`. During `quiz-me`, do not enqueue explanations, review notes, propose replacements, or alter an existing `note_review_queue`.
 
-When the learner confirms an explanation is clear, propose replacing the corresponding notes and specify the change. Preserve all relevant source-supported detail, show the original and proposed wording, and edit only with explicit confirmation. Use an independent subagent only for complex or cross-subsection changes.
+After an initial or substantially adapted explanation, ask: "Is that clear, or should I explain it another way?" Continue explaining until the learner confirms it is clear.
+
+Whenever a concept group is mastered during `teach-me`, add its learning objective, corresponding note location, and any final confirmed explanation to `note_review_queue`. A mastered group counts toward the threshold even when no new explanation was needed.
+
+When the queue reaches three groups, review it before starting the next group. Compare recorded explanations with the current corresponding notes and propose a replacement only when an explanation materially improves clarity, organization, accuracy, or usefulness; do not propose equivalent rewording.
+
+For each proposal, preserve all relevant source-supported detail, show the original and proposed wording, explain the improvement, and edit only with explicit confirmation. If no replacement is warranted, say so. After the review and the learner's response, clear those three entries regardless of whether the proposals were accepted. Persist fewer than three entries across pauses and resumed sessions. Use an independent subagent only for complex or cross-subsection changes.
 
 ## 6. End session
 

@@ -9,7 +9,7 @@ Use this skill when a learner wants a persistent question-first assessment sessi
 
 ## 1. Manage study session
 
-Use `study-session-manager` for session setup, progress persistence, preference loading, note updates, and session ending. Use the exact source and notes paths, progress state, and relevant confirmed preferences it returns.
+Use `study-session-manager` for session setup, progress persistence, preference loading, and session ending. Use the exact source and notes paths, progress state, and relevant confirmed preferences it returns. Do not enqueue, review, or modify notes; leave any existing `note_review_queue` unchanged.
 
 ## 2. Use quizzing skill
 
