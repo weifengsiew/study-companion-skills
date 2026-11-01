@@ -1,6 +1,6 @@
 ---
 name: learning-preference-manager
-description: Load and update confirmed preferences shared by note generation and interactive teaching across repositories.
+description: Internal support for notes-generator, teach-me, and quiz-me. Manage confirmed learning preferences when delegated or explicitly invoked.
 ---
 
 # Learning Preference Manager

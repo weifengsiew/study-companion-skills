@@ -1,6 +1,6 @@
 ---
 name: scope-reviewer
-description: "Check that learning questions and answers cover the same concepts and stay focused."
+description: "Internal reviewer used by notes-generator. Check question-answer scope when delegated or explicitly invoked."
 ---
 
 # Scope Reviewer

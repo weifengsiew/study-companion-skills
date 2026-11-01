@@ -1,6 +1,6 @@
 ---
 name: transferability-reviewer
-description: "Check whether learning questions, answers, and aids teach reusable concepts independently of source-specific details."
+description: "Internal reviewer used by notes-generator. Check for transferable understanding when delegated or explicitly invoked."
 ---
 
 # Transferability Reviewer

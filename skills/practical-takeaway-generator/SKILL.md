@@ -1,6 +1,6 @@
 ---
 name: practical-takeaway-generator
-description: Create a concise, source-wide practical takeaway using a dependency-driven Mermaid workflow and interpretive caption.
+description: Internal synthesis stage used by notes-generator. Create a source-wide practical workflow when delegated or explicitly invoked.
 ---
 
 # Practical Takeaway Generator

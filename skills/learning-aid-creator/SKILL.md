@@ -1,6 +1,6 @@
 ---
 name: learning-aid-creator
-description: Create a source-grounded learning aid that supplements an explanatory question-and-answer note.
+description: Internal creation stage used by notes-generator. Create a source-grounded learning aid when delegated or explicitly invoked.
 ---
 
 # Learning Aid Creator

@@ -1,6 +1,6 @@
 ---
 name: answer-generator
-description: Write source-grounded answers to learning questions.
+description: Internal creation stage used by notes-generator. Write source-grounded answers to learning questions when delegated or explicitly invoked.
 ---
 
 # Answer Generator

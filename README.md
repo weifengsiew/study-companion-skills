@@ -42,7 +42,7 @@ Install Study Companion Skills from the GitHub repository weifengsiew/study-comp
 Paste this into Codex:
 
 ```text
-Install all skills from https://github.com/weifengsiew/study-companion-skills into my personal Codex skills directory. If a skill with the same name is already installed, leave it untouched and tell me. Codex should detect the new skills automatically; if it does not, tell me to restart Codex.
+Install Study Companion Skills as a plugin from the GitHub repository weifengsiew/study-companion-skills. Add its marketplace if needed, install and enable the plugin, then tell me to start a new chat.
 ```
 
 ### Start learning
@@ -61,13 +61,13 @@ Once installed, turn your source material into an interactive learning experienc
 
 ## Included skills
 
-### Main workflows
+### Public workflows
 
 - `teach-me` sets up a persistent study session from source material and matching notes.
 - `quiz-me` sets up a persistent question-first assessment session and explains identified gaps.
 - `notes-generator` creates reviewed learning notes from source material, subsection by subsection.
 
-### Supporting workflows
+### Internal workflows
 
 - `teach-loop`
 - `quiz-loop`
@@ -84,52 +84,38 @@ Once installed, turn your source material into an interactive learning experienc
 - `alignment-reviewer`
 - `transferability-reviewer`
 
-Install the complete collection because the main workflows delegate work to the supporting skills.
+The plugin installs every workflow together. On OpenAI surfaces, only the three public workflows are selected automatically. In Claude Code, narrow internal descriptions guide ordinary requests through the public workflows while preserving delegated and explicit use.
 
 ## Requirements
 
-- Codex with skill support, or Claude Code with plugin support.
+- Codex or Claude Code with plugin support.
 - Source material supplied by the learner. The `teach-me` and `quiz-me` workflows will not generate notes without it.
 
 ## Install in Codex
 
-In Codex, ask:
-
-```text
-Install all skills from https://github.com/weifengsiew/study-companion-skills into my personal Codex skills directory (`${CODEX_HOME:-$HOME/.codex}/skills`). If a skill with the same name is already installed, leave it untouched and tell me. Codex should detect the new skills automatically; if it does not, tell me to restart Codex.
-```
-
-Or install them manually in a terminal by cloning the repository and copying its skills:
+Add this repository as a plugin marketplace from your terminal:
 
 ```bash
-git clone https://github.com/weifengsiew/study-companion-skills.git
-study_skills_dir="${CODEX_HOME:-$HOME/.codex}/skills"
-mkdir -p "$study_skills_dir"
-for skill in study-companion-skills/skills/*; do
-  destination="$study_skills_dir/$(basename "$skill")"
-  if [ -e "$destination" ]; then
-    printf 'Skipped existing skill: %s\n' "$(basename "$skill")"
-  else
-    cp -R "$skill" "$destination"
-  fi
-done
+codex plugin marketplace add weifengsiew/study-companion-skills
 ```
 
-Codex detects skill changes automatically. If the new skills do not appear, restart Codex.
+Start Codex and open the plugin browser:
+
+```bash
+codex
+```
+
+Then run `/plugins`, find **Study Companion Skills**, and select **Install plugin**. Start a new chat before using it for the first time.
 
 ### Update in Codex
 
-From the directory containing your clone, pull the latest changes and copy them into your Codex skills directory. This replaces files for skills from this collection:
+Refresh the marketplace from your terminal:
 
 ```bash
-git -C study-companion-skills pull
-study_skills_dir="${CODEX_HOME:-$HOME/.codex}/skills"
-for skill in study-companion-skills/skills/*; do
-  destination="$study_skills_dir/$(basename "$skill")"
-  mkdir -p "$destination"
-  cp -R "$skill/." "$destination/"
-done
+codex plugin marketplace upgrade study-companion-skills
 ```
+
+Open `/plugins` in Codex to confirm the installed version, then start a new chat.
 
 ### Use in Codex
 
@@ -193,7 +179,7 @@ Skills installed through the plugin are namespaced with `study-companion-skills`
 /study-companion-skills:quiz-me Use source <source-path> and notes <notes-path>.
 ```
 
-Claude can also select a skill automatically when the request matches its description.
+Use `teach-me`, `quiz-me`, or `notes-generator` as the normal entry points. Internal workflows remain available for delegation and explicit advanced use; their descriptions identify them as internal to discourage accidental routing.
 
 ### Update in Claude Code
 
@@ -207,6 +193,9 @@ claude plugin update study-companion-skills@study-companion-skills
 
 ```text
 study-companion-skills/
+├── .agents/
+│   └── plugins/
+│       └── marketplace.json
 ├── .claude-plugin/
 │   ├── marketplace.json
 │   └── plugin.json
@@ -218,7 +207,7 @@ study-companion-skills/
     └── supporting skills...
 ```
 
-Each skill contains a required `SKILL.md` and optional Codex UI metadata in `agents/openai.yaml`. The root `plugin.json` is the portable package manifest; `.claude-plugin/plugin.json` is the Claude Code compatibility manifest.
+Each skill contains a required `SKILL.md` and optional UI metadata in `agents/openai.yaml`. On OpenAI surfaces, internal workflows set `allow_implicit_invocation: false`; Claude Code uses their narrowly scoped descriptions for routing. The root `plugin.json` is the portable package manifest; `.claude-plugin/plugin.json` is the Claude Code compatibility manifest.
 
 ## Development
 

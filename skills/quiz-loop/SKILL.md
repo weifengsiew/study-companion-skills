@@ -1,6 +1,6 @@
 ---
 name: quiz-loop
-description: Assess interactively from source-grounded notes before explaining, targeting instruction to gaps in the learner's understanding.
+description: Internal assessment loop used by quiz-me. Run question-first assessment when delegated or explicitly invoked.
 ---
 
 # Quiz Loop

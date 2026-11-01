@@ -2,3 +2,5 @@ interface:
   display_name: "Notes Formatter"
   short_description: "Format completed learning notes consistently"
   default_prompt: "Use $notes-formatter to assemble these completed note components into the canonical Markdown layout."
+policy:
+  allow_implicit_invocation: false

@@ -1,6 +1,6 @@
 ---
 name: question-generator
-description: Create one source-grounded learning question for a supplied learning objective.
+description: Internal creation stage used by notes-generator. Create one source-grounded learning question when delegated or explicitly invoked.
 ---
 
 # Question Generator

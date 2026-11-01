@@ -1,6 +1,6 @@
 ---
 name: study-session-manager
-description: Manage the shared lifecycle of persistent teach-me and quiz-me sessions, including setup, progress, preferences, note updates, and ending.
+description: Internal lifecycle support for teach-me and quiz-me. Manage study-session setup, progress, preferences, note updates, and ending when delegated or explicitly invoked.
 ---
 
 # Study Session Manager

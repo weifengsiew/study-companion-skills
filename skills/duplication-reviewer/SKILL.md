@@ -1,6 +1,6 @@
 ---
 name: duplication-reviewer
-description: Review completed detailed learning notes for duplicate questions and repeated teaching content while preserving necessary reinforcement and useful learning aids.
+description: Internal final reviewer used by notes-generator. Check completed notes for unnecessary duplication when delegated or explicitly invoked.
 ---
 
 # Duplication Reviewer

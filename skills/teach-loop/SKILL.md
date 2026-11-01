@@ -1,6 +1,6 @@
 ---
 name: teach-loop
-description: Teach interactively from source-grounded notes in small chunks, checking understanding and adapting instruction. Use for guided learning rather than one-shot explanations.
+description: Internal teaching loop used by teach-me. Run adaptive, source-grounded instruction when delegated or explicitly invoked.
 ---
 
 # Teach Loop

@@ -1,6 +1,6 @@
 ---
 name: notes-formatter
-description: Assemble completed learning-note components into the canonical Markdown layout and validate their structure and internal links without changing instructional content.
+description: Internal finalization stage used by notes-generator. Assemble and validate the canonical notes layout when delegated or explicitly invoked.
 ---
 
 # Notes Formatter

@@ -2,3 +2,5 @@ interface:
   display_name: "Transferability Reviewer"
   short_description: "Check notes for reusable, source-independent concepts"
   default_prompt: "Use $transferability-reviewer to check whether these learning notes are understandable without the source material."
+policy:
+  allow_implicit_invocation: false

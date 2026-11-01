@@ -1,6 +1,6 @@
 ---
 name: big-picture-generator
-description: Create a concise, source-wide orientation to the central topic, its major parts, and their relationships.
+description: Internal synthesis stage used by notes-generator. Create a concise source-wide orientation when delegated or explicitly invoked.
 ---
 
 # Big Picture Generator

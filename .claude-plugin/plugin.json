@@ -1,7 +1,7 @@
 {
   "name": "study-companion-skills",
   "description": "Source-grounded note generation and interactive teaching workflows.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Siew Wei Feng"
   },

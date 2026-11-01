@@ -2,3 +2,5 @@ interface:
   display_name: "Duplication Reviewer"
   short_description: "Review learning notes for unnecessary repetition"
   default_prompt: "Use $duplication-reviewer to review these completed learning notes for unnecessary duplication."
+policy:
+  allow_implicit_invocation: false

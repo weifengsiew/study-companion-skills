@@ -1,6 +1,6 @@
 ---
 name: alignment-reviewer
-description: Check question-answer alignment with a source.
+description: Internal reviewer used by notes-generator. Check question-answer alignment with a source when delegated or explicitly invoked.
 ---
 
 # Alignment Reviewer
