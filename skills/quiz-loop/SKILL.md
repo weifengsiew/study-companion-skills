@@ -23,7 +23,7 @@ If the notes do not answer a question, say so before using the source. Distingui
 
 Choose the smallest effective question, selecting what to assess independently of response format.
 
-Before selecting a conceptual-understanding question, read [`../shared/conceptual-understanding.md`](../shared/conceptual-understanding.md); before a technical-fluency question, read [`../shared/technical-fluency.md`](../shared/technical-fluency.md). Follow the learner's selected emphasis: load only the relevant reference, or each when first needed for a balanced mix. Emphasis does not override required coverage; deviate only when accurate assessment requires it, briefly explaining why.
+Before selecting a conceptual-understanding question, read [`../study-session-manager/references/conceptual-understanding.md`](../study-session-manager/references/conceptual-understanding.md); before a technical-fluency question, read [`../study-session-manager/references/technical-fluency.md`](../study-session-manager/references/technical-fluency.md). Follow the learner's selected emphasis: load only the relevant reference, or each when first needed for a balanced mix. Emphasis does not override required coverage; deviate only when accurate assessment requires it, briefly explaining why.
 
 ### Response formats
 
