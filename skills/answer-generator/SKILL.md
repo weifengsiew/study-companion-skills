@@ -18,7 +18,8 @@ Given a question and source, produce a clear, self-contained answer. Treat the s
 Use compact Markdown in this order:
 
 ### 1. Key terminology (required)
-- Define the key terms needed to answer the current question and explain its learning objective, using the source material.
+- Define only the key terms needed to answer the current question and explain its learning objective, using the source material.
+- Introduce each necessary technical term here before its first use in the general principle.
 - Use these key terms consistently throughout the rest of the answer.
 
 ### 2. General principle (required)
@@ -27,7 +28,7 @@ Use compact Markdown in this order:
 - Preserve assumptions, qualifiers, and trade-offs.
 - Include relevant equations for mathematical or quantitative relationships, defining symbols and applicable assumptions.
 
-### 3. Source-specific example (when useful)
+### 3. Source-specific example (required)
 
 - Describe in one sentence a source-specific example that illustrates the general principle, and cite the exact source section, subsection, page, or other available locator.
 

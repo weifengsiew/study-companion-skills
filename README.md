@@ -79,6 +79,8 @@ Once installed, turn your source material into an interactive learning experienc
 - `learning-aid-creator`
 - `big-picture-generator`
 - `practical-takeaway-generator`
+- `notes-formatter`
+- `duplication-reviewer`
 - `alignment-reviewer`
 - `transferability-reviewer`
 

@@ -1,26 +1,26 @@
 ---
 name: practical-takeaway-generator
-description: Create a concise, source-wide practical takeaway from completed learning notes using a dependency-driven Mermaid flow and an interpretive caption.
+description: Create a concise, source-wide practical takeaway using a dependency-driven Mermaid workflow and interpretive caption.
 ---
 
 # Practical Takeaway Generator
 
-Use the source map, completed detailed notes, and heading-anchor index to create the opening `Practical takeaway` section. Consult only targeted source excerpts when these inputs cannot support or verify a point.
+Use the source map, completed detailed notes, and heading-anchor index to create the content for the opening `Practical takeaway` section. Consult targeted source excerpts only when these inputs cannot support or verify a point.
 
-Synthesize when and why the source's concepts are useful in practice, the decisions they inform, and the actions they enable. Draw on the source as a whole without repeating granular explanations from the detailed notes.
+Synthesize when and why the source's concepts are useful, the decisions they inform, and the actions they enable. Do not repeat the `Big picture` orientation or granular explanations from the detailed notes.
 
-## Workflow diagram
+## Workflow
 
-Use a Mermaid diagram to synthesize an overall workflow from related smaller workflows in the source when their relationships support it. Make the information flow explicit: every main-path step must consume a result produced earlier and produce an output needed by the next step. Label nodes or edges concisely enough to make those handoffs understandable.
+Create one Mermaid flowchart showing a coherent, source-supported practical workflow. Organize the main path around meaningful dependencies and handoffs: each step should use a result, decision, or condition established earlier and produce something needed later.
 
-Show optional work only as a conditional branch that rejoins the main flow when appropriate. Show validation failures, missing inputs, or other source-supported failure handling as decision branches leading to retry, correction, escalation, or stopping; do not present them as unconditional main-path steps. Group related steps into stages, preserve source-supported relationships, and verify that the diagram renders clearly.
+Include optional work and failure handling only when supported by the source. Show optional paths as conditional branches that rejoin when appropriate, and show failure paths leading to retry, correction, escalation, or stopping.
+
+Do not force every source theme into the workflow. Include only concepts that contribute to the practical flow, and do not invent dependencies or guidance.
 
 ## Caption
 
-After the diagram, write one concise caption that explains how to follow the main flow, what is passed between stages, and what each conditional branch means. Clarify when optional and failure paths are taken and where they return or terminate. Do not merely repeat the node labels or narrate every step.
+After the workflow, add one concise caption explaining when to use it, what moves between its stages, and how to interpret its branches. Do not merely repeat node labels or narrate every step.
 
-Do not introduce guidance unsupported by the source.
+Use descriptive internal links where the detailed notes help the learner understand or perform a stage. Ensure each link matches the heading-anchor index.
 
-Use valid internal Markdown links in the caption where detailed notes help the learner act on or understand a stage. Use descriptive link text and exact heading anchors.
-
-Return only the complete `Practical takeaway` section.
+Return only the `Practical takeaway` content, without its heading.

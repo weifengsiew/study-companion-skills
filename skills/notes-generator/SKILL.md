@@ -1,6 +1,6 @@
 ---
 name: notes-generator
-description: Create per-subsection learning notes by orchestrating question, answer, aid, scope, alignment, and transferability reviews.
+description: Create per-subsection learning notes by orchestrating question, answer, aid, review, synthesis, and formatting skills.
 ---
 
 # Notes Generator
@@ -20,42 +20,26 @@ Determine the matching notes path before processing the source:
 
 Save the completed notes there. Report the exact source and notes paths and explain that `teach-me` uses them to start or resume a study session. If saving fails, say so rather than implying the file exists.
 
+For every invoked skill, prefer the bundled copy when present and require no installation path.
+
 ## From source to notes
 
-Before dividing the source, map its central purpose or question, major parts, and important relationships. Use this map throughout generation. Divide the source into two or three contiguous parts at natural section or subsection boundaries; never split a subsection. Assign each part one primary subagent to process its subsections in source order. For each subsection, the primary identifies distinct learning objectives and runs the ordered seven-step workflow, performing creation while separate subagents perform reviews. Keep subsections as distinct outputs and batch when capacity is limited. Prefer bundled copies of named skills when present; require no installation path:
+Before dividing the source, map its central purpose or question, major parts, and important relationships. Use this map throughout generation. Divide the source into two or three contiguous parts at natural section or subsection boundaries; never split a subsection. Assign each part one primary subagent to process its subsections in source order. Keep subsections as distinct outputs and batch when capacity is limited.
 
-Minimize repeated context. Give each stage only the current subsection, its objectives, the relevant source-map slice, and the drafts or findings that stage needs. Do not pass unrelated source sections or completed notes. Include supplemental material only when the current draft relies on it.
+For each subsection, identify distinct learning objectives and run these stages in order. One primary subagent runs creation stages 1, 2, and 4; separate reviewer subagents run stages 3, 5, and 6. The primary applies valid findings after each review.
 
-1. `question-generator` — the primary subagent creates one focused question per objective.
-2. `answer-generator` — the same primary subagent creates one answer per objective.
-3. `scope-reviewer` — a separate reviewer subagent reviews all objectives in the subsection; the primary incorporates valid findings before creating the learning aids.
-4. `learning-aid-creator` — the primary subagent creates learning aid(s) per objective and places each aid directly after the answer's general principle and before any source-specific example, without a separate learning-aid subsection.
-5. `alignment-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection; the primary incorporates valid findings before continuing.
-6. `transferability-reviewer` — a separate reviewer subagent reviews all objectives and current drafts in the subsection; the primary incorporates valid findings before final review.
-7. Independent final review — a fresh reviewer subagent validates the completed subsection against the source and all specialist findings. The primary incorporates valid final corrections before returning the subsection.
+1. `question-generator`
+2. `answer-generator`
+3. `scope-reviewer`
+4. `learning-aid-creator`
+5. `alignment-reviewer`
+6. `transferability-reviewer`
 
-## Reviewers
+Minimize repeated context. Give each stage only the current subsection, its objectives, the relevant source-map slice, and the drafts or findings it needs. Give reviewers only the relevant objective, source-map context, source excerpt, and current draft; tag findings by objective and report failed stages as incomplete. Include supplemental material only when the draft relies on it.
 
-Give each specialist reviewer only its instructions, the subsection's objectives, relevant source-map context and source excerpt, and current drafts. Review each objective separately and tag findings by objective.
+## Finalize
 
-After specialist reviews, give a fresh final reviewer the objectives, relevant source excerpt, completed drafts, and all specialist findings. It checks that valid findings were addressed, resolves conflicts, and identifies remaining gaps or errors without repeating resolved findings or exceeding the objectives.
-
-The primary incorporates valid final corrections before returning the subsection. Report failed or timed-out stages as incomplete; batch large subsections as needed.
-
-## Completeness pass
-
-After completing all subsections, compare the source map with a compact index of note headings, objectives, and relationships. Consult targeted source and note sections only for suspected gaps. For each confirmed gap, define a focused learning objective and run it through the full seven-step workflow.
-
-## Deduplication pass
-
-Perform a deduplication pass: remove duplication across questions and between answers and aids.
-
-## Big picture and practical takeaways
-
-After completing the detailed notes, invoke `big-picture-generator`, then `practical-takeaway-generator`, with the source map, completed notes, and a heading-anchor index. Provide targeted source excerpts only when the map and notes cannot support or verify a point. Prefer bundled copies when present; require no installation path.
-
-## Output format
-
-Place their returned sections at the beginning of the notes in this order: `Big picture`, then `Practical takeaway`. Keep the `Big picture` free of internal links; verify that links in the practical takeaway resolve to the intended detailed headings.
-
-Then output the remaining notes in source order: heading (same as the source material), `Question`, and answer, with each learning aid embedded directly after its general principle.
+1. Invoke `duplication-reviewer` with the source map, learning objectives, and completed detailed notes; apply valid recommendations.
+2. Invoke `big-picture-generator` with the source map and completed notes, then invoke `practical-takeaway-generator` with the source map, completed notes, and heading-anchor index.
+3. Invoke `notes-formatter` with their outputs, the detailed note units, source order, and heading-anchor index.
+4. Return formatting blockers to the responsible generation stage, rerun the formatter, then save and report the complete notes path.
