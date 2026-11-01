@@ -5,41 +5,51 @@ description: Manage the shared lifecycle of persistent teach-me and quiz-me sess
 
 # Study Session Manager
 
-Use this skill as the session-lifecycle support for `teach-me` and `quiz-me`.
+Support the session lifecycle for `teach-me` and `quiz-me`.
 
 ## 1. Set up session
 
-Find the exact source material at `source_dir/<source-name>` and its matching notes at `source_dir/notes/<notes-name>`, where `source_dir` is the source material's containing directory. Handle setup according to what is known and available:
+Locate the exact source at `source_dir/<source-name>` and matching notes at `source_dir/notes/<notes-name>`, where `source_dir` contains the source:
 
 - If either exact path is unknown, ask the learner to specify it.
-- If the source path is known but the source is absent, ask the learner to place the source material there. Do not attempt note generation without the source.
-- If the source exists but the notes are absent, invoke the available `notes-generator` skill using the host's skill-invocation syntax. Return to setup after the notes file has been created, using the exact notes path reported by `notes-generator`.
+- If the source is absent at its known path, ask the learner to place it there. Do not attempt note generation without it.
+- If the source exists but the notes do not, invoke `notes-generator` with the host's skill-invocation syntax. Resume setup using the exact notes path it reports.
 - If both files exist, inform the learner of both exact paths and continue.
 
 Do not generate notes directly.
 
 ## 2. Persist progress
 
-Create `source_dir/notes/progress/<notes-stem>-progress.json` if it does not exist, where `<notes-stem>` is the notes filename without its final extension. If a progress file already exists during session setup, do not replace or reset it without asking; resume it by default. Routine state updates during an active session do not require repeated confirmation. Track exactly:
+Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<notes-stem>` is the notes filename without its final extension. During setup, resume an existing file by default and ask before replacing or resetting it. Routine active-session updates need no repeated confirmation. Track exactly:
 
 1. `source` — source path.
 2. `notes` — matching notes path.
 3. `current_chunk` — current subsection, status, and pending question.
 4. `concept_coverage` — required, tested, and remaining concepts.
 5. `assessment_history` — learner answers and assessment results.
+6. `session_preferences` — the current assessment emphasis and response format.
 
 Update the progress file after every learner response, clarification, or note change.
 
 ## 3. Load learning preferences
 
-Invoke the available `learning-preference-manager` skill using the host's skill-invocation syntax and load confirmed `shared` and `teaching` preferences relevant to the current session. Continue without them if the profile is unavailable. Apply the preference precedence defined by the manager and return the relevant preferences to the calling workflow.
+Invoke `learning-preference-manager` with the host's skill-invocation syntax. Load confirmed `shared` and `teaching` preferences relevant to this session, apply the manager's precedence, and return them to the calling workflow. Continue if the profile is unavailable.
 
-## 4. Manage note updates
+## 4. Choose session preferences
+
+At the start of every session, ask the learner to choose:
+
+1. **Assessment emphasis:** conceptual understanding, technical fluency, or a balanced mix.
+2. **Response format:** multiple choice, short answer, or a mix.
+
+Do not substitute saved preferences for this prompt. If the current request specifies either choice, use it and ask only for what is missing. These are session, not permanent learning, preferences. Save them in `session_preferences`, return and apply them throughout the session, and allow changes at any time. On resumption, ask again and replace the prior choices.
+
+## 5. Manage note updates
 
 After an initial or substantially adapted explanation, ask: "Is that clear, or should I explain it another way?" Continue explaining if further clarification is needed.
 
-Whenever the learner confirms an explanation is clear, propose it as a replacement for the corresponding notes, and specify what it would change. Preserve all relevant source-supported detail. Show the original and proposed wording, and edit only with explicit confirmation. Use an independent subagent only for complex or cross-subsection changes.
+When the learner confirms an explanation is clear, propose replacing the corresponding notes and specify the change. Preserve all relevant source-supported detail, show the original and proposed wording, and edit only with explicit confirmation. Use an independent subagent only for complex or cross-subsection changes.
 
-## 5. End session
+## 6. End session
 
-When the learner explicitly pauses or ends the session, save progress first, then invoke `learning-preference-manager` to propose preference changes. Save only confirmed changes. Failure or refusal to update preferences must not prevent the session from ending.
+When the learner explicitly pauses or ends the session, save progress, then invoke `learning-preference-manager` to propose preference changes. Save only confirmed changes; failure or refusal to update preferences must not prevent the session from ending.
