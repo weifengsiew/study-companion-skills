@@ -51,8 +51,8 @@ Once installed, turn your source material into an interactive learning experienc
 
 1. **Choose your material.** Put the textbook chapter, article, course handout, or document you want to study in a file your assistant can access.
 2. **Generate your study notes.** Run `notes-generator` with the source file path. By default, it saves the reviewed notes to `source_dir/notes/<source-stem>-notes.md`. If suitable notes already exist, you can skip this step.
-3. **Start your tutoring session.** Run `teach-me` with the exact source and notes paths reported by `notes-generator` (or the paths to your existing notes).
-4. **Learn at your own pace.** Work through one manageable concept group at a time. Answer questions, ask for clarification, request examples, or pause whenever you need.
+3. **Choose how to learn.** Run `teach-me` for guided instruction or `quiz-me` for question-first assessment, using the exact source and notes paths reported by `notes-generator` (or the paths to your existing notes).
+4. **Learn at your own pace.** Work through one manageable concept group at a time. Answer questions, ask for clarification, request examples, test yourself, or pause whenever you need.
 5. **Pick up where you left off.** Return later and resume from your saved progress file without starting over.
 
 **Note:** `notes-generator` performs multiple review passes, so note generation can take some time.
@@ -89,23 +89,24 @@ Install the complete collection because the main workflows delegate work to the 
 ## Requirements
 
 - Codex with skill support, or Claude Code with plugin support.
-- Source material supplied by the learner. The `teach-me` workflow will not generate notes without it.
+- Source material supplied by the learner. The `teach-me` and `quiz-me` workflows will not generate notes without it.
 
 ## Install in Codex
 
 In Codex, ask:
 
 ```text
-Install all skills from https://github.com/weifengsiew/study-companion-skills into my personal Codex skills directory (~/.agents/skills). If a skill with the same name is already installed, leave it untouched and tell me. Codex should detect the new skills automatically; if it does not, tell me to restart Codex.
+Install all skills from https://github.com/weifengsiew/study-companion-skills into my personal Codex skills directory (`${CODEX_HOME:-$HOME/.codex}/skills`). If a skill with the same name is already installed, leave it untouched and tell me. Codex should detect the new skills automatically; if it does not, tell me to restart Codex.
 ```
 
 Or install them manually in a terminal by cloning the repository and copying its skills:
 
 ```bash
 git clone https://github.com/weifengsiew/study-companion-skills.git
-mkdir -p ~/.agents/skills
+study_skills_dir="${CODEX_HOME:-$HOME/.codex}/skills"
+mkdir -p "$study_skills_dir"
 for skill in study-companion-skills/skills/*; do
-  destination="$HOME/.agents/skills/$(basename "$skill")"
+  destination="$study_skills_dir/$(basename "$skill")"
   if [ -e "$destination" ]; then
     printf 'Skipped existing skill: %s\n' "$(basename "$skill")"
   else
@@ -122,8 +123,9 @@ From the directory containing your clone, pull the latest changes and copy them 
 
 ```bash
 git -C study-companion-skills pull
+study_skills_dir="${CODEX_HOME:-$HOME/.codex}/skills"
 for skill in study-companion-skills/skills/*; do
-  destination="$HOME/.agents/skills/$(basename "$skill")"
+  destination="$study_skills_dir/$(basename "$skill")"
   mkdir -p "$destination"
   cp -R "$skill/." "$destination/"
 done
@@ -137,10 +139,16 @@ Generate notes:
 Use $notes-generator to turn <source-path> into learning notes.
 ```
 
-Start a study session:
+Start a guided study session:
 
 ```text
 Use $teach-me with source <source-path> and notes <notes-path>.
+```
+
+Start a question-first quiz session:
+
+```text
+Use $quiz-me with source <source-path> and notes <notes-path>.
 ```
 
 ## Install in Claude Code
@@ -181,6 +189,10 @@ Skills installed through the plugin are namespaced with `study-companion-skills`
 /study-companion-skills:teach-me Use source <source-path> and notes <notes-path>.
 ```
 
+```text
+/study-companion-skills:quiz-me Use source <source-path> and notes <notes-path>.
+```
+
 Claude can also select a skill automatically when the request matches its description.
 
 ### Update in Claude Code
@@ -201,6 +213,7 @@ study-companion-skills/
 ├── plugin.json
 └── skills/
     ├── teach-me/
+    ├── quiz-me/
     ├── notes-generator/
     └── supporting skills...
 ```
