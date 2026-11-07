@@ -36,24 +36,20 @@ Use the learner's selected format. Prefer short answer; use multiple choice spar
 
 ## Coverage and state
 
-Use the ordered persisted `chunks` collection to track coverage and select each question. Assess all relevant concepts through explanation, comparison, or application.
+Use persisted objectives to select each question. Assess relevant concepts through explanation, comparison, or application.
 
-Given session state, resume `current_chunk_id`, its pending question, and remaining chunks. After each learner response or clarification, return a chunk update in this shape:
+Given session state, resume `current_objective_id` and the last question on that objective. After each response or clarification, return an objective update:
 
 ```json
 {
-  "chunk_id": "chunk-03",
+  "objective_id": "objective-02",
   "status": "in_progress",
-  "pending_question": null,
-  "latest_attempt": {
-    "question": "The question asked",
-    "response": "The learner's response",
-    "assessment": "unsuccessful",
-    "gaps": ["Specific unresolved misconception"],
-    "feedback": "Brief assessment feedback",
-    "timestamp": "2026-11-07T10:25:00Z"
+  "question": {
+    "prompt": "The question asked",
+    "outcome": "unsuccessful",
+    "gaps": ["Specific unresolved misconception"]
   }
 }
 ```
 
-The session manager applies the update, updates attempt counters and `successful_attempt_proportion`, replaces `latest_attempt`, updates `unsuccessful_attempt_gaps`, and advances `current_chunk_id` only when the chunk is complete. Do not alter a note-review queue; quiz progress has none.
+The session manager appends the question to the objective and updates its status. Derive attempt counts or proportions from question outcomes when needed. Quiz progress has no note-review queue.

@@ -36,24 +36,20 @@ Use the learner's selected format. Prefer short answer; use multiple choice spar
 
 ## Coverage and state
 
-Use the ordered persisted `chunks` collection to track coverage and select the next group. Assess all relevant concepts through explanation, comparison, or application.
+Use persisted objectives to select the next focus. Assess relevant concepts through explanation, comparison, or application.
 
-Given session state, resume `current_chunk_id`, its pending question, remaining chunks, and the note-review queue. After each learner response or clarification, return a chunk update in this shape:
+Given session state, resume `current_objective_id` and the last question on that objective. After each response or clarification, return an objective update:
 
 ```json
 {
-  "chunk_id": "chunk-03",
-  "status": "mastered",
-  "pending_question": null,
-  "latest_interaction": {
-    "question": "The question asked",
-    "response": "The learner's response",
-    "understanding": "demonstrated",
-    "gaps": [],
-    "feedback": "Brief assessment feedback",
-    "timestamp": "2026-11-07T10:25:00Z"
+  "objective_id": "objective-02",
+  "status": "in_progress",
+  "question": {
+    "prompt": "The question asked",
+    "outcome": "incomplete",
+    "gaps": ["Specific unresolved gap"]
   }
 }
 ```
 
-The session manager applies the update, replaces `latest_interaction`, updates `unresolved_gaps`, and advances `current_chunk_id` only when the chunk is complete. Teaching does not use attempt counters or success proportions.
+The session manager appends the question to the objective and updates its status. Teaching does not use attempt counters or success proportions. Preserve the note-review queue behavior defined by `study-session-manager`.

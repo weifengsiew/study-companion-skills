@@ -28,15 +28,18 @@ Create a mode-specific file when absent: `source_dir/notes/progress/<notes-stem>
   "mode": "teaching",
   "source": "source path",
   "notes": "matching notes path",
-  "current_chunk_id": "chunk-03",
-  "chunks": [
+  "current_objective_id": "objective-02",
+  "objectives": [
     {
-      "id": "chunk-03",
-      "title": "Chunk title",
+      "id": "objective-02",
+      "objective": "Explain the current concept",
       "status": "in_progress",
-      "unresolved_gaps": [],
-      "pending_question": "Current unanswered question",
-      "latest_interaction": null
+      "questions": [
+        {
+          "prompt": "Current unanswered question",
+          "outcome": "pending"
+        }
+      ]
     }
   ],
   "session_preferences": {
@@ -47,15 +50,15 @@ Create a mode-specific file when absent: `source_dir/notes/progress/<notes-stem>
 }
 ```
 
-For `quiz-me`, use the same structure with `"mode": "quizzing"`; each chunk instead has `attempt_count`, `successful_attempt_count`, `successful_attempt_proportion`, `unsuccessful_attempt_gaps`, `pending_question`, and `latest_attempt`. Omit `note_review_queue` from the quiz file.
+For `quiz-me`, use the same structure with `"mode": "quizzing"`; use `successful`, `unsuccessful`, or `pending` question outcomes and omit `note_review_queue`.
 
-During setup, identify all required concept groups, create the complete ordered `chunks` collection before the first live question, and assign each chunk a stable `id` and source- or notes-derived `title`. `chunks` is the source of truth; statuses are `untested`, `in_progress`, `mastered`, or `skipped`. `current_chunk_id` must reference a chunk; derive previous and future chunks from its position. Do not persist `concept_coverage` or a cross-chunk `assessment_history`.
+During setup, create an empty objectives collection; add each objective when the loop encounters it. Each objective has a stable `id`, its text, a status (`in_progress`, `mastered`, or `skipped`), and one or more questions. `current_objective_id` must reference an existing objective; the last question on that objective is the question to resume. Do not predefine future objectives or persist chunks, concept coverage, or a separate assessment history.
 
-In teaching, overwrite `latest_interaction` after each response; do not store older responses. Store the latest understanding, feedback, and gaps in that interaction, and maintain unresolved gaps in `unresolved_gaps`. Do not use attempt counters or successful-attempt proportions.
+In teaching, append each question with its outcome (`demonstrated`, `incomplete`, or `pending`) and any relevant gaps. Do not use attempt counters or success proportions.
 
-In quizzing, overwrite `latest_attempt` after each response; do not store older responses. Increment `attempt_count` for every response and `successful_attempt_count` only when the learner demonstrates the objective. Set `successful_attempt_proportion` to `null` with no attempts, otherwise to `successful_attempt_count / attempt_count`. Store latest gaps in `latest_attempt.gaps` and unresolved gaps in `unsuccessful_attempt_gaps`, removing resolved gaps.
+In quizzing, append each question with its outcome (`successful`, `unsuccessful`, or `pending`) and any gaps. Derive counts or proportions from question outcomes when needed; do not persist them.
 
-Save after issuing a question, receiving a response, clarifying or reassessing, completing a concept group, reviewing notes, or changing notes.
+Save after issuing a question, receiving a response, clarifying or reassessing, completing an objective, reviewing notes, or changing notes.
 
 ## 3. Load learning preferences
 
