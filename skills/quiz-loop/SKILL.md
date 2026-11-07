@@ -56,4 +56,4 @@ Given session state, resume `current_chunk_id`, its pending question, and remain
 }
 ```
 
-The session manager applies the update, updates counters and `successful_attempt_proportion`, replaces `latest_attempt`, updates `unsuccessful_attempt_gaps`, and advances `current_chunk_id` only when the chunk is complete. Do not alter the note-review queue.
+The session manager applies the update, updates attempt counters and `successful_attempt_proportion`, replaces `latest_attempt`, updates `unsuccessful_attempt_gaps`, and advances `current_chunk_id` only when the chunk is complete. Do not alter a note-review queue; quiz progress has none.

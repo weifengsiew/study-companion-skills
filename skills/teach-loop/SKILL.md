@@ -45,10 +45,10 @@ Given session state, resume `current_chunk_id`, its pending question, remaining 
   "chunk_id": "chunk-03",
   "status": "mastered",
   "pending_question": null,
-  "latest_attempt": {
+  "latest_interaction": {
     "question": "The question asked",
     "response": "The learner's response",
-    "assessment": "successful",
+    "understanding": "demonstrated",
     "gaps": [],
     "feedback": "Brief assessment feedback",
     "timestamp": "2026-11-07T10:25:00Z"
@@ -56,4 +56,4 @@ Given session state, resume `current_chunk_id`, its pending question, remaining 
 }
 ```
 
-The session manager applies the update, updates counters and `successful_attempt_proportion`, replaces `latest_attempt`, updates `unsuccessful_attempt_gaps`, and advances `current_chunk_id` only when the chunk is complete.
+The session manager applies the update, replaces `latest_interaction`, updates `unresolved_gaps`, and advances `current_chunk_id` only when the chunk is complete. Teaching does not use attempt counters or success proportions.

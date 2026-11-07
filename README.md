@@ -53,7 +53,7 @@ Once installed, turn your source material into an interactive learning experienc
 2. **Generate your study notes.** Run `notes-generator` with the source file path. By default, it saves the reviewed notes to `source_dir/notes/<source-stem>-notes.md`. If suitable notes already exist, you can skip this step.
 3. **Choose how to learn.** Run `teach-me` for guided instruction or `quiz-me` for question-first assessment, using the exact source and notes paths reported by `notes-generator` (or the paths to your existing notes). At the start of each session, choose conceptual understanding, technical fluency, or a balanced mix, then choose multiple choice, short answer, or a mix.
 4. **Learn at your own pace.** Work through one manageable concept group at a time. Answer questions, ask for clarification, request examples, test yourself, or pause whenever you need.
-5. **Pick up where you left off.** Return later and resume from your saved progress file without starting over.
+5. **Pick up where you left off.** Return later and resume from the saved teaching or quiz progress file without starting over.
 
 **Note:** `notes-generator` performs multiple review passes, so note generation can take some time.
 

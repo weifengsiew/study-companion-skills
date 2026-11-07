@@ -20,11 +20,12 @@ Do not generate notes directly.
 
 ## 2. Persist progress
 
-Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<notes-stem>` is the notes filename without its final extension. During setup, resume an existing file by default and ask before replacing or resetting it. Routine active-session updates need no repeated confirmation. Persist exactly this shape:
+Create a mode-specific file when absent: `source_dir/notes/progress/<notes-stem>-teach-progress.json` for `teach-me` or `source_dir/notes/progress/<notes-stem>-quiz-progress.json` for `quiz-me`. `<notes-stem>` is the notes filename without its final extension. During setup, resume that mode's file by default and ask before replacing or resetting it. Routine active-session updates need no repeated confirmation. Persist the matching shape:
 
 ```json
 {
   "schema_version": 1,
+  "mode": "teaching",
   "source": "source path",
   "notes": "matching notes path",
   "current_chunk_id": "chunk-03",
@@ -33,12 +34,9 @@ Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<not
       "id": "chunk-03",
       "title": "Chunk title",
       "status": "in_progress",
-      "attempt_count": 0,
-      "successful_attempt_count": 0,
-      "successful_attempt_proportion": null,
-      "unsuccessful_attempt_gaps": [],
+      "unresolved_gaps": [],
       "pending_question": "Current unanswered question",
-      "latest_attempt": null
+      "latest_interaction": null
     }
   ],
   "session_preferences": {
@@ -49,9 +47,13 @@ Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<not
 }
 ```
 
-During setup, identify all required concept groups, create the complete ordered `chunks` collection before the first live question, and assign each chunk a stable `id` and source- or notes-derived `title`. `chunks` is the source of truth; statuses are `untested`, `in_progress`, `mastered`, or `skipped`. `current_chunk_id` must reference a chunk; derive previous and future chunks from its position. Do not persist `concept_coverage` or `assessment_history`.
+For `quiz-me`, use the same structure with `"mode": "quizzing"`; each chunk instead has `attempt_count`, `successful_attempt_count`, `successful_attempt_proportion`, `unsuccessful_attempt_gaps`, `pending_question`, and `latest_attempt`. Omit `note_review_queue` from the quiz file.
 
-Overwrite `latest_attempt` after each response; do not store older responses. Increment `attempt_count` for every response and `successful_attempt_count` only when the learner demonstrates the objective. Set `successful_attempt_proportion` to `null` with no attempts, otherwise to `successful_attempt_count / attempt_count`. Store latest gaps in `latest_attempt.gaps` and unresolved gaps in `unsuccessful_attempt_gaps`, removing resolved gaps.
+During setup, identify all required concept groups, create the complete ordered `chunks` collection before the first live question, and assign each chunk a stable `id` and source- or notes-derived `title`. `chunks` is the source of truth; statuses are `untested`, `in_progress`, `mastered`, or `skipped`. `current_chunk_id` must reference a chunk; derive previous and future chunks from its position. Do not persist `concept_coverage` or a cross-chunk `assessment_history`.
+
+In teaching, overwrite `latest_interaction` after each response; do not store older responses. Store the latest understanding, feedback, and gaps in that interaction, and maintain unresolved gaps in `unresolved_gaps`. Do not use attempt counters or successful-attempt proportions.
+
+In quizzing, overwrite `latest_attempt` after each response; do not store older responses. Increment `attempt_count` for every response and `successful_attempt_count` only when the learner demonstrates the objective. Set `successful_attempt_proportion` to `null` with no attempts, otherwise to `successful_attempt_count / attempt_count`. Store latest gaps in `latest_attempt.gaps` and unresolved gaps in `unsuccessful_attempt_gaps`, removing resolved gaps.
 
 Save after issuing a question, receiving a response, clarifying or reassessing, completing a concept group, reviewing notes, or changing notes.
 
