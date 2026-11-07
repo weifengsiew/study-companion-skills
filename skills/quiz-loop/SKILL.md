@@ -5,11 +5,13 @@ description: Internal assessment loop used by quiz-me. Run question-first assess
 
 # Quiz Loop
 
-Use the current concept group's notes as the primary basis for assessment, explanation, and sequence, with compact session state. Consult targeted source excerpts for corroboration or examples, and retrieve other sections only when advancing or a question spans topics. Flag note/source conflicts and do not present disputed notes as fact. If the notes do not answer a question, say so before using the source; distinguish supported claims from inference or illustration and cite relevant locations when useful.
+Use the current concept group's notes as the primary basis for assessment and explanation, with compact session state. Consult targeted source excerpts for corroboration or examples; retrieve other sections only when advancing or a question spans topics. Flag note/source conflicts, say when notes do not answer a question, and distinguish supported claims from inference or illustration.
 
-## Concept groups
+A concept group is the smallest independently masterable set needed for one learning objective and focused question cycle. Split independently masterable concepts. A group is complete only when the learner demonstrates its objective.
 
-A concept group is the smallest set of concepts needed for one learning objective and one focused explanation-and-question cycle. Separate independently masterable concepts. A group is complete only when the learner demonstrates its objective; skipped or incomplete groups do not count.
+Choose the smallest effective question. Before a conceptual-understanding question, read [`../study-session-manager/references/conceptual-understanding.md`](../study-session-manager/references/conceptual-understanding.md); before a technical-fluency question, read [`../study-session-manager/references/technical-fluency.md`](../study-session-manager/references/technical-fluency.md). Follow the learner's selected emphasis and response format; prefer short answer and use multiple choice sparingly. Emphasis does not override required coverage.
+
+Use persisted objectives to resume `current_objective_id`, select the next focus, and assess relevant concepts. Return an objective update to `study-session-manager`; do not save progress directly.
 
 ## Quiz loop
 
@@ -21,22 +23,7 @@ A concept group is the smallest set of concepts needed for one learning objectiv
 6. **Reassess:** After the learner confirms the explanation is clear, ask a different question that tests the same concepts without answer cues. Demonstrated understanding, rather than recall of the explanation, is required before marking them mastered.
 7. **Advance or pause:** Mark demonstrated groups as mastered and move to the next untested group. If understanding remains incomplete, explain or adapt again and reassess. Allow the learner to skip or pause, and always wait for their response before advancing.
 
-## Question selection
-
-Choose the smallest effective question, selecting what to assess independently of response format.
-
-Before a conceptual-understanding question, read [`../study-session-manager/references/conceptual-understanding.md`](../study-session-manager/references/conceptual-understanding.md); before a technical-fluency question, read [`../study-session-manager/references/technical-fluency.md`](../study-session-manager/references/technical-fluency.md). Follow the learner's selected emphasis, loading only the relevant reference or each as first needed for a balanced mix. Emphasis does not override required coverage; deviate only when accurate assessment requires it and briefly explain why.
-
-### Response formats
-
-- **Multiple choice**
-- **Short answer**
-
-Use the learner's selected format. Prefer short answer; use multiple choice sparingly for recognition or targeted diagnosis.
-
 ## Coverage and state
-
-Use persisted objectives to select each question. Assess relevant concepts through explanation, comparison, or application.
 
 Given session state, resume `current_objective_id` and the last question on that objective. After each response or clarification, return an objective update:
 
@@ -52,4 +39,4 @@ Given session state, resume `current_objective_id` and the last question on that
 }
 ```
 
-The session manager appends the question to the objective and updates its status. Derive attempt counts or proportions from question outcomes when needed. Quiz progress has no note-review queue.
+Derive attempt counts or proportions from question outcomes when needed. Return the update to `study-session-manager`; quiz progress has no note-review queue.

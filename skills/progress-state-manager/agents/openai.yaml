@@ -1,0 +1,6 @@
+interface:
+  display_name: "Progress State Manager"
+  short_description: "Persist objective-based study progress"
+  default_prompt: "Use $progress-state-manager to load and update my teaching or quiz progress."
+policy:
+  allow_implicit_invocation: false
