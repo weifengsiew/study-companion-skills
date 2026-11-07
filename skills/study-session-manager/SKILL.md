@@ -20,7 +20,17 @@ Do not generate notes directly.
 
 ## 2. Persist progress
 
-Invoke `progress-state-manager` with the mode and exact source and notes paths to create or resume the mode-specific file, record objective and question updates, and save each state change. Routine updates need no repeated confirmation.
+Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<notes-stem>` is the notes filename without its final extension. During setup, resume an existing file by default and ask before replacing or resetting it. Routine active-session updates need no repeated confirmation. Track exactly:
+
+1. `source` — source path.
+2. `notes` — matching notes path.
+3. `current_chunk` — current subsection, status, and pending question.
+4. `concept_coverage` — required, tested, mastered, and remaining concept groups.
+5. `assessment_history` — learner answers and assessment results.
+6. `session_preferences` — the current assessment emphasis and response format.
+7. `note_review_queue` — teach-me groups awaiting note review, with each learning objective, note location, and any final confirmed explanation; quiz-me leaves this unchanged.
+
+Update the progress file after every learner response, clarification, concept-group completion, note review, or note change.
 
 ## 3. Load learning preferences
 
@@ -37,13 +47,15 @@ Do not substitute saved preferences for this prompt. If the current request spec
 
 ## 5. Manage teach-me note updates
 
-Use this section only for `teach-me`; `quiz-me` leaves `note_review_queue` unchanged.
+Run this section only for `teach-me`. During `quiz-me`, do not enqueue explanations, review notes, propose replacements, or alter an existing `note_review_queue`.
 
-After each initial or substantially adapted explanation, ask: "Is that clear, or should I explain it another way?" Re-explain until confirmed.
+After an initial or substantially adapted explanation, ask: "Is that clear, or should I explain it another way?" Continue explaining until the learner confirms it is clear.
 
-When a concept group is mastered, enqueue its objective, note location, and final confirmed explanation; count it toward the three-group threshold even without a new explanation.
+Whenever a concept group is mastered during `teach-me`, add its learning objective, corresponding note location, and any final confirmed explanation to `note_review_queue`. A mastered group counts toward the threshold even when no new explanation was needed.
 
-When the queue reaches three, review it before the next group. Compare each explanation with its note and propose replacements only for material improvements in clarity, organization, accuracy, or usefulness. For each proposal, retain source-supported detail, show original and proposed text, explain the improvement, and edit only with explicit confirmation; say when no replacement is warranted. After the learner responds, clear the three entries regardless of acceptance. Persist fewer than three entries across pauses. Use an independent subagent only for complex or cross-subsection changes.
+When the queue reaches three groups, review it before starting the next group. Compare recorded explanations with the current corresponding notes and propose a replacement only when an explanation materially improves clarity, organization, accuracy, or usefulness; do not propose equivalent rewording.
+
+For each proposal, preserve all relevant source-supported detail, show the original and proposed wording, explain the improvement, and edit only with explicit confirmation. If no replacement is warranted, say so. After the review and the learner's response, clear those three entries regardless of whether the proposals were accepted. Persist fewer than three entries across pauses and resumed sessions. Use an independent subagent only for complex or cross-subsection changes.
 
 ## 6. End session
 
