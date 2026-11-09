@@ -1,0 +1,34 @@
+{
+  "source": "path/to/source.ipynb",
+  "notes": "path/to/notes.md",
+  "current_chunk": {
+    "subsection": "1 · Topic name",
+    "status": "in_progress",
+    "pending_question": "Question to answer"
+  },
+  "concept_coverage": {
+    "required": [
+      "Concept 1",
+      "Concept 2"
+    ],
+    "tested": [],
+    "mastered": [],
+    "remaining": [
+      "Concept 1",
+      "Concept 2"
+    ]
+  },
+  "assessment_history": [
+    {
+      "question": "Question text",
+      "answer": "Learner answer",
+      "assessment": "correct",
+      "gaps": []
+    }
+  ],
+  "session_preferences": {
+    "assessment_emphasis": "conceptual understanding",
+    "response_format": "short answer"
+  },
+  "note_review_queue": []
+}

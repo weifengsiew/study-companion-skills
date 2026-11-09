@@ -20,15 +20,9 @@ Do not generate notes directly.
 
 ## 2. Persist progress
 
-Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<notes-stem>` is the notes filename without its final extension. During setup, resume an existing file by default and ask before replacing or resetting it. Routine active-session updates need no repeated confirmation. Track exactly:
+Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<notes-stem>` is the notes filename without its final extension. During setup, resume an existing file by default and ask before replacing or resetting it. Routine active-session updates need no repeated confirmation.
 
-1. `source` — source path.
-2. `notes` — matching notes path.
-3. `current_chunk` — current subsection, status, and pending question.
-4. `concept_coverage` — required, tested, mastered, and remaining concept groups.
-5. `assessment_history` — learner answers and assessment results.
-6. `session_preferences` — the current assessment emphasis and response format.
-7. `note_review_queue` — teach-me groups awaiting note review, with each learning objective, note location, and any final confirmed explanation; quiz-me leaves this unchanged.
+Before creating, loading, or updating a progress file, read and follow [`references/progress-schema.md`](references/progress-schema.md). Persist exactly that structure and enforce its value constraints and coverage invariants. Do not add other fields. During `quiz-me`, leave `note_review_queue` unchanged.
 
 Update the progress file after every learner response, clarification, concept-group completion, note review, or note change.
 

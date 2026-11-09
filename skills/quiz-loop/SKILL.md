@@ -40,4 +40,4 @@ Default to the learner's selected format. Prefer short answer to demonstrate und
 
 Track required, tested, mastered, and remaining concept groups before each question. Collectively assess all relevant concepts through explanation, comparison, or application.
 
-Given session state, resume its current group, pending question, and remaining groups. Return enough state to record the learner's answer and assessment without altering the note-review queue.
+Given session state, resume its current group, pending question, and remaining groups. Return the learner's answer and assessment using the [`progress schema`](../study-session-manager/references/progress-schema.md), without altering the note-review queue; the session manager persists it and enforces invariants.
