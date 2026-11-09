@@ -38,6 +38,6 @@ Default to the learner's selected format. Prefer short answer to demonstrate und
 
 ## Coverage and state
 
-Track required, tested, mastered, and remaining concept groups before testing each group. Collectively assess all relevant concepts through explanation, comparison, or application.
+Use `assessment_history` citations to identify source and notes locations already assessed correctly. Progress through relevant locations in source order; a location remains unfinished when its assessments are only `partially_correct` or `incorrect`. Finish only after every relevant location has at least one correct assessment.
 
-Given session state, resume its current group, pending question, remaining groups, and note-review queue. Return the learner's answer, assessment, and newly mastered group data using the [`progress schema`](../study-session-manager/references/progress-schema.md); the session manager persists it and enforces invariants.
+Resume `pending_assessment` before selecting a new location. Return the learner's answer, assessment, and newly mastered group data using the [`progress schema`](../study-session-manager/references/progress-schema.md); the session manager persists it. Preserve the note-review queue.

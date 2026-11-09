@@ -1,29 +1,31 @@
 {
   "source": "path/to/source.ipynb",
   "notes": "path/to/notes.md",
-  "current_chunk": {
-    "subsection": "1 · Topic name",
-    "status": "in_progress",
-    "pending_question": "Question to answer"
-  },
-  "concept_coverage": {
-    "required": [
-      "Concept 1",
-      "Concept 2"
-    ],
-    "tested": [],
-    "mastered": [],
-    "remaining": [
-      "Concept 1",
-      "Concept 2"
-    ]
+  "pending_assessment": {
+    "question": "Question to answer",
+    "citations": {
+      "source": [
+        "Section 1 · Topic name"
+      ],
+      "notes": [
+        "## 1 · Topic name"
+      ]
+    }
   },
   "assessment_history": [
     {
       "question": "Question text",
       "answer": "Learner answer",
       "assessment": "correct",
-      "gaps": []
+      "gaps": [],
+      "citations": {
+        "source": [
+          "Section 1 · Topic name"
+        ],
+        "notes": [
+          "## 1 · Topic name"
+        ]
+      }
     }
   ],
   "session_preferences": {

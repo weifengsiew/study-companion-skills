@@ -22,7 +22,9 @@ Do not generate notes directly.
 
 Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<notes-stem>` is the notes filename without its final extension. During setup, resume an existing file by default and ask before replacing or resetting it. Routine active-session updates need no repeated confirmation.
 
-Before creating, loading, or updating a progress file, read and follow [`references/progress-schema.md`](references/progress-schema.md). Persist exactly that structure and enforce its value constraints and coverage invariants. Do not add other fields. During `quiz-me`, leave `note_review_queue` unchanged.
+Before creating, loading, or updating a progress file, read and follow [`references/progress-schema.md`](references/progress-schema.md). Persist exactly that structure and enforce its value constraints. Do not add other fields. During `quiz-me`, leave `note_review_queue` unchanged.
+
+When creating a question, record it and its source and notes citations in `pending_assessment`. After assessing the learner's answer, move the question and citations into `assessment_history`, add the answer, assessment, and gaps, then clear `pending_assessment`. On resumption, continue a pending assessment when present. Otherwise, continue after the latest history entry's cited location, or start at the beginning when history is empty.
 
 Update the progress file after every learner response, clarification, concept-group completion, note review, or note change.
 
