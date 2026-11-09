@@ -379,6 +379,9 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("schema", help="Print the authoritative contract")
 
     init_parser = subparsers.add_parser("init", help="Create a new progress file")
+    init_parser.add_argument(
+        "--file", type=Path, help="Exact output path (default: derived from --notes)"
+    )
     init_parser.add_argument("--source", required=True)
     init_parser.add_argument("--notes", required=True)
     init_parser.add_argument(
@@ -451,7 +454,9 @@ def main(argv: list[str] | None = None) -> int:
 
         if args.command == "init":
             notes_path = Path(args.notes)
-            path = notes_path.parent / "progress" / f"{notes_path.stem}-progress.json"
+            path = args.file or (
+                notes_path.parent / "progress" / f"{notes_path.stem}-progress.json"
+            )
             if path.exists():
                 raise ProgressError(
                     f"Progress file already exists; refusing to overwrite: {path}"

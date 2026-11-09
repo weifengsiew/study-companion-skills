@@ -72,6 +72,32 @@ class ManageProgressCliTests(unittest.TestCase):
         self.assertEqual(state["assessment_history"], [])
         self.assertEqual(state["note_review_queue"], [])
 
+    def test_init_uses_supplied_progress_path_exactly(self) -> None:
+        supplied_progress = (
+            self.root
+            / "Test-1-Prep"
+            / "progress"
+            / "L2"
+            / "04_improve_retrieval-progress.json"
+        )
+        output = self.run_cli(
+            "init",
+            "--file",
+            str(supplied_progress),
+            "--source",
+            str(self.source),
+            "--notes",
+            str(self.notes),
+            "--assessment-emphasis",
+            "conceptual understanding",
+            "--response-format",
+            "short answer",
+        )
+
+        self.assertEqual(output["file"], str(supplied_progress))
+        self.assertTrue(supplied_progress.is_file())
+        self.assertFalse(self.progress.exists())
+
     def test_schema_exposes_types_keys_and_allowed_values(self) -> None:
         output = self.run_cli("schema")
         self.assertIn("pending_assessment", output["required_keys"]["progress"])

@@ -23,13 +23,13 @@ Do not generate notes directly.
 Use `scripts/manage_progress.py` for every progress-file operation; never read or edit progress JSON directly. Run it from this skill directory or use its absolute path. Common commands are:
 
 ```bash
-python3 scripts/manage_progress.py init --source <source-path> --notes <notes-path> --assessment-emphasis <value> --response-format <value>
+python3 scripts/manage_progress.py init [--file <progress-path>] --source <source-path> --notes <notes-path> --assessment-emphasis <value> --response-format <value>
 python3 scripts/manage_progress.py show --file <progress-path>
 python3 scripts/manage_progress.py set-pending --file <progress-path> --question <text> --source-citation <locator> --notes-citation <locator>
 python3 scripts/manage_progress.py record-answer --file <progress-path> --answer <text> --assessment <value> [--gap <text>]
 ```
 
-`init` derives `source_dir/notes/progress/<notes-stem>-progress.json` and refuses to overwrite it. Resume with `show`; ask before replacing or resetting existing progress. Use `set-preferences` when session choices change. During `teach-me`, use `enqueue-review` and `clear-reviews`; during `quiz-me`, never use either review command. Use `<command> --help` for arguments and allowed values, or `schema` for the complete contract.
+`init` uses a learner-supplied `--file` exactly; otherwise, it derives `source_dir/notes/progress/<notes-stem>-progress.json`. It never overwrites an existing file. Resume with `show`; ask before replacing or resetting existing progress. Use `set-preferences` when session choices change. During `teach-me`, use `enqueue-review` and `clear-reviews`; during `quiz-me`, never use either review command. Use `<command> --help` for arguments and allowed values, or `schema` for the complete contract.
 
 On resumption, continue a pending assessment when present. Otherwise, continue after the latest history entry's cited location, or start at the beginning when history is empty.
 
