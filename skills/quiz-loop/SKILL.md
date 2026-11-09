@@ -40,4 +40,4 @@ Default to the learner's selected format. Prefer short answer to demonstrate und
 
 Use `assessment_history` citations to identify source and notes locations already assessed correctly. Progress through relevant locations in source order; a location remains unfinished when its assessments are only `partially_correct` or `incorrect`. Finish only after every relevant location has at least one correct assessment.
 
-Resume `pending_assessment` before selecting a new location. Return the learner's answer and assessment using the [`progress schema`](../study-session-manager/references/progress-schema.md), without altering the note-review queue; the session manager persists it.
+Resume `pending_assessment` before selecting a new location. Return the learner's answer, assessment, gaps, and citations to the session manager for persistence without altering the note-review queue.

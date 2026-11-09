@@ -20,13 +20,20 @@ Do not generate notes directly.
 
 ## 2. Persist progress
 
-Create `source_dir/notes/progress/<notes-stem>-progress.json` when absent; `<notes-stem>` is the notes filename without its final extension. During setup, resume an existing file by default and ask before replacing or resetting it. Routine active-session updates need no repeated confirmation.
+Use `scripts/manage_progress.py` for every progress-file operation; never read or edit progress JSON directly. Run it from this skill directory or use its absolute path. Common commands are:
 
-Before creating, loading, or updating a progress file, read and follow [`references/progress-schema.md`](references/progress-schema.md). Persist exactly that structure and enforce its value constraints. Do not add other fields. During `quiz-me`, leave `note_review_queue` unchanged.
+```bash
+python3 scripts/manage_progress.py init --source <source-path> --notes <notes-path> --assessment-emphasis <value> --response-format <value>
+python3 scripts/manage_progress.py show --file <progress-path>
+python3 scripts/manage_progress.py set-pending --file <progress-path> --question <text> --source-citation <locator> --notes-citation <locator>
+python3 scripts/manage_progress.py record-answer --file <progress-path> --answer <text> --assessment <value> [--gap <text>]
+```
 
-When creating a question, record it and its source and notes citations in `pending_assessment`. After assessing the learner's answer, move the question and citations into `assessment_history`, add the answer, assessment, and gaps, then clear `pending_assessment`. On resumption, continue a pending assessment when present. Otherwise, continue after the latest history entry's cited location, or start at the beginning when history is empty.
+`init` derives `source_dir/notes/progress/<notes-stem>-progress.json` and refuses to overwrite it. Resume with `show`; ask before replacing or resetting existing progress. Use `set-preferences` when session choices change. During `teach-me`, use `enqueue-review` and `clear-reviews`; during `quiz-me`, never use either review command. Use `<command> --help` for arguments and allowed values, or `schema` for the complete contract.
 
-Update the progress file after every learner response, clarification, concept-group completion, note review, or note change.
+On resumption, continue a pending assessment when present. Otherwise, continue after the latest history entry's cited location, or start at the beginning when history is empty.
+
+Persist through the script after every learner response, clarification, concept-group completion, note review, or note change.
 
 ## 3. Load learning preferences
 
@@ -47,11 +54,11 @@ Run this section only for `teach-me`. During `quiz-me`, do not enqueue explanati
 
 After an initial or substantially adapted explanation, ask: "Is that clear, or should I explain it another way?" Continue explaining until the learner confirms it is clear.
 
-Whenever a concept group is mastered during `teach-me`, add its learning objective, corresponding note location, and any final confirmed explanation to `note_review_queue`. A mastered group counts toward the threshold even when no new explanation was needed.
+Whenever a concept group is mastered during `teach-me`, enqueue its learning objective, corresponding note location, and any final confirmed explanation. A mastered group counts toward the threshold even when no new explanation was needed.
 
 When the queue reaches three groups, review it before starting the next group. Compare recorded explanations with the current corresponding notes and propose a replacement only when an explanation materially improves clarity, organization, accuracy, or usefulness; do not propose equivalent rewording.
 
-For each proposal, preserve all relevant source-supported detail, show the original and proposed wording, explain the improvement, and edit only with explicit confirmation. If no replacement is warranted, say so. After the review and the learner's response, clear those three entries regardless of whether the proposals were accepted. Persist fewer than three entries across pauses and resumed sessions. Use an independent subagent only for complex or cross-subsection changes.
+For each proposal, preserve all relevant source-supported detail, show the original and proposed wording, explain the improvement, and edit only with explicit confirmation. If no replacement is warranted, say so. After the review and the learner's response, clear those three entries through the script regardless of whether the proposals were accepted. Persist fewer than three entries across pauses and resumed sessions. Use an independent subagent only for complex or cross-subsection changes.
 
 ## 6. End session
 
