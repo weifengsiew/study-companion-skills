@@ -133,7 +133,16 @@ class ManageProgressCliTests(unittest.TestCase):
             "--gap",
             "Did not explain the penalty mechanism.",
         )
-        state = output["state"]
+        self.assertNotIn("state", output)
+        self.assertEqual(
+            output["summary"],
+            {
+                "has_pending_assessment": False,
+                "assessment_count": 1,
+                "note_review_count": 1,
+            },
+        )
+        state = self.run_cli("show", "--file", str(self.progress))["state"]
         self.assertIsNone(state["pending_assessment"])
         self.assertEqual(len(state["assessment_history"]), 1)
         self.assertEqual(state["assessment_history"][0]["assessment"], "partially_correct")
@@ -189,8 +198,35 @@ class ManageProgressCliTests(unittest.TestCase):
         output = self.run_cli(
             "clear-reviews", "--file", str(self.progress), "--count", "2"
         )
-        queue = output["state"]["note_review_queue"]
+        self.assertNotIn("state", output)
+        self.assertEqual(output["summary"]["note_review_count"], 1)
+        queue = self.run_cli("show", "--file", str(self.progress))["state"][
+            "note_review_queue"
+        ]
         self.assertEqual([entry["learning_objective"] for entry in queue], ["Objective 2"])
+
+    def test_mutations_return_compact_summary_and_show_returns_full_state(self) -> None:
+        init_output = self.initialize()
+        self.assertNotIn("state", init_output)
+        self.assertEqual(init_output["summary"]["assessment_count"], 0)
+
+        pending_output = self.run_cli(
+            "set-pending",
+            "--file",
+            str(self.progress),
+            "--question",
+            "Question",
+            "--source-citation",
+            "Source section",
+            "--notes-citation",
+            "Notes section",
+        )
+        self.assertNotIn("state", pending_output)
+        self.assertTrue(pending_output["summary"]["has_pending_assessment"])
+
+        show_output = self.run_cli("show", "--file", str(self.progress))
+        self.assertIn("state", show_output)
+        self.assertNotIn("summary", show_output)
 
 
 if __name__ == "__main__":

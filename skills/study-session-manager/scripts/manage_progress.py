@@ -282,14 +282,27 @@ def _read_text_argument(value: str | None, file: str | None, label: str) -> str:
     return result
 
 
-def _result(operation: str, path: Path, state: dict[str, Any] | None = None) -> None:
+def _result(
+    operation: str,
+    path: Path,
+    state: dict[str, Any] | None = None,
+    *,
+    include_state: bool = False,
+) -> None:
     value: dict[str, Any] = {
         "ok": True,
         "operation": operation,
         "file": str(path),
     }
     if state is not None:
-        value["state"] = state
+        if include_state:
+            value["state"] = state
+        else:
+            value["summary"] = {
+                "has_pending_assessment": state["pending_assessment"] is not None,
+                "assessment_count": len(state["assessment_history"]),
+                "note_review_count": len(state["note_review_queue"]),
+            }
     _print_json(value)
 
 
@@ -465,7 +478,7 @@ def main(argv: list[str] | None = None) -> int:
             _result("validate", path)
             return 0
         if args.command == "show":
-            _result("show", path, state)
+            _result("show", path, state, include_state=True)
             return 0
         if args.command == "set-pending":
             if state["pending_assessment"] is not None:
