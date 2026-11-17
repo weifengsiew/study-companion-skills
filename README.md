@@ -37,7 +37,7 @@ Ready to turn your next reading into an interactive learning experience?
 Paste this into Claude Code:
 
 ```text
-Install Study Companion Skills from the GitHub repository weifengsiew/study-companion-skills as a user plugin, so it is available in all my projects. Add its marketplace if needed, then confirm that the plugin is enabled. Explain the available study workflows, what each one is for, and how I can start using them.
+Install Study Companion Skills from the GitHub repository weifengsiew/study-companion-skills as a user plugin, so it is available in all my projects. Add its marketplace if needed, then confirm that the plugin is enabled. Introduce the available study workflows (`notes-generator`, `teach-me`, `quiz-me`, and `prepare-for-test`), explain what each one does and how it benefits me, and show me how to start using them.
 ```
 
 ### Codex
@@ -45,7 +45,7 @@ Install Study Companion Skills from the GitHub repository weifengsiew/study-comp
 Paste this into Codex:
 
 ```text
-Install Study Companion Skills as a plugin from the GitHub repository weifengsiew/study-companion-skills. Add its marketplace if needed, install and enable the plugin, then tell me to start a new chat. Explain the available study workflows, what each one is for, and how I can start using them.
+Install Study Companion Skills as a plugin from the GitHub repository weifengsiew/study-companion-skills. Add its marketplace if needed, install and enable the plugin, then tell me to start a new chat. Introduce the available study workflows (`notes-generator`, `teach-me`, `quiz-me`, and `prepare-for-test`), explain what each one does and how it benefits me, and show me how to start using them.
 ```
 
 ### Start learning
