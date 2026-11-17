@@ -18,7 +18,7 @@ Before processing the source, determine the notes path:
 - Create the `notes/` directory when needed.
 - If the target file already exists, do not replace it without the learner's explicit confirmation.
 
-Save the completed notes there. Report the exact source and notes paths, explaining that `teach-me` uses them to start or resume a study session. Report save failures rather than implying success.
+Before creating the directory or notes file, tell the learner the exact notes path and proceed only after explicit approval. Save the completed notes there, then report the exact source and notes paths, explaining that `teach-me` uses them to start or resume a study session. Report save failures rather than implying success.
 
 For every invoked skill, prefer the bundled copy when present and require no installation path.
 

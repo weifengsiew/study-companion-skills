@@ -1,0 +1,6 @@
+interface:
+  display_name: "Gaps Extractor"
+  short_description: "Extract recorded learning gaps from progress"
+  default_prompt: "Use $gaps-extractor to extract assessments with learning gaps from my study progress file."
+policy:
+  allow_implicit_invocation: false

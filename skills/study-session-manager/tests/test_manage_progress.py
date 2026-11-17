@@ -62,15 +62,15 @@ class ManageProgressCliTests(unittest.TestCase):
             [
                 "source",
                 "notes",
+                "session_status",
                 "pending_assessment",
                 "assessment_history",
                 "session_preferences",
-                "note_review_queue",
             ],
         )
         self.assertIsNone(state["pending_assessment"])
+        self.assertEqual(state["session_status"], "not_started")
         self.assertEqual(state["assessment_history"], [])
-        self.assertEqual(state["note_review_queue"], [])
 
     def test_init_uses_supplied_progress_path_exactly(self) -> None:
         supplied_progress = (
@@ -97,6 +97,71 @@ class ManageProgressCliTests(unittest.TestCase):
         self.assertEqual(output["file"], str(supplied_progress))
         self.assertTrue(supplied_progress.is_file())
         self.assertFalse(self.progress.exists())
+
+    def test_question_types_derive_and_persist_balanced_emphasis(self) -> None:
+        output = self.run_cli(
+            "init",
+            "--source",
+            str(self.source),
+            "--notes",
+            str(self.notes),
+            "--question-type",
+            "recall",
+            "--question-type",
+            "code or result tracing",
+            "--response-format",
+            "mix",
+        )
+        self.assertEqual(output["summary"]["session_status"], "not_started")
+        preferences = self.run_cli("show", "--file", str(self.progress))["state"][
+            "session_preferences"
+        ]
+        self.assertEqual(preferences["assessment_emphasis"], "balanced mix")
+        self.assertEqual(
+            preferences["question_types"], ["recall", "code or result tracing"]
+        )
+
+    def test_legacy_preferences_gain_default_question_types(self) -> None:
+        self.initialize()
+        state = json.loads(self.progress.read_text(encoding="utf-8"))
+        del state["session_preferences"]["question_types"]
+        self.progress.write_text(json.dumps(state), encoding="utf-8")
+
+        shown = self.run_cli("show", "--file", str(self.progress))["state"]
+        self.assertEqual(
+            shown["session_preferences"]["question_types"],
+            [
+                "recall",
+                "explanation",
+                "comparison",
+                "transfer",
+            ],
+        )
+
+    def test_legacy_note_review_queue_is_dropped_on_next_write(self) -> None:
+        self.initialize()
+        state = json.loads(self.progress.read_text(encoding="utf-8"))
+        state["note_review_queue"] = [
+            {
+                "learning_objective": "Legacy objective",
+                "note_location": "## Legacy location",
+                "confirmed_explanation": None,
+            }
+        ]
+        self.progress.write_text(json.dumps(state), encoding="utf-8")
+
+        self.run_cli(
+            "set-preferences",
+            "--file",
+            str(self.progress),
+            "--assessment-emphasis",
+            "balanced mix",
+            "--response-format",
+            "mix",
+        )
+
+        migrated = json.loads(self.progress.read_text(encoding="utf-8"))
+        self.assertNotIn("note_review_queue", migrated)
 
     def test_schema_exposes_types_keys_and_allowed_values(self) -> None:
         output = self.run_cli("schema")
@@ -126,17 +191,8 @@ class ManageProgressCliTests(unittest.TestCase):
         )
         self.assertIn("refusing to overwrite", output["errors"][0])
 
-    def test_question_and_answer_transition_preserves_review_queue(self) -> None:
+    def test_question_and_answer_transition(self) -> None:
         self.initialize()
-        self.run_cli(
-            "enqueue-review",
-            "--file",
-            str(self.progress),
-            "--learning-objective",
-            "Explain regularization",
-            "--note-location",
-            "## Regularization",
-        )
         self.run_cli(
             "set-pending",
             "--file",
@@ -163,16 +219,62 @@ class ManageProgressCliTests(unittest.TestCase):
         self.assertEqual(
             output["summary"],
             {
+                "session_status": "active",
                 "has_pending_assessment": False,
                 "assessment_count": 1,
-                "note_review_count": 1,
             },
         )
         state = self.run_cli("show", "--file", str(self.progress))["state"]
         self.assertIsNone(state["pending_assessment"])
         self.assertEqual(len(state["assessment_history"]), 1)
         self.assertEqual(state["assessment_history"][0]["assessment"], "partially_correct")
-        self.assertEqual(len(state["note_review_queue"]), 1)
+
+    def test_complete_transition_requires_no_pending_assessment(self) -> None:
+        self.initialize()
+        not_started = self.run_cli(
+            "complete", "--file", str(self.progress), expected_code=1
+        )
+        self.assertIn("has not started", not_started["errors"][0])
+        self.run_cli(
+            "set-pending",
+            "--file",
+            str(self.progress),
+            "--question",
+            "Question",
+            "--source-citation",
+            "Source section",
+            "--notes-citation",
+            "Notes section",
+        )
+        refused = self.run_cli(
+            "complete", "--file", str(self.progress), expected_code=1
+        )
+        self.assertIn("pending assessment", refused["errors"][0])
+        self.run_cli(
+            "record-answer",
+            "--file",
+            str(self.progress),
+            "--answer",
+            "Answer",
+            "--assessment",
+            "correct",
+        )
+        completed = self.run_cli("complete", "--file", str(self.progress))
+        self.assertEqual(completed["summary"]["session_status"], "complete")
+
+        refused_question = self.run_cli(
+            "set-pending",
+            "--file",
+            str(self.progress),
+            "--question",
+            "Another question",
+            "--source-citation",
+            "Source section",
+            "--notes-citation",
+            "Notes section",
+            expected_code=1,
+        )
+        self.assertIn("completed session", refused_question["errors"][0])
 
     def test_validate_rejects_unknown_keys(self) -> None:
         self.initialize()
@@ -209,27 +311,114 @@ class ManageProgressCliTests(unittest.TestCase):
         )
         self.assertIn("requires at least one gap", output["errors"][0])
 
-    def test_clear_reviews_removes_exact_prefix(self) -> None:
+    def test_clarifications_persist_without_recording_and_rephrasing_is_free(self) -> None:
         self.initialize()
-        for index in range(3):
+        self.run_cli(
+            "set-pending",
+            "--file",
+            str(self.progress),
+            "--question",
+            "Original question",
+            "--source-citation",
+            "Source section",
+            "--notes-citation",
+            "Notes section",
+        )
+        self.run_cli(
+            "replace-question",
+            "--file",
+            str(self.progress),
+            "--question",
+            "Clearer question",
+        )
+        for index in range(6):
             self.run_cli(
-                "enqueue-review",
+                "add-clarification",
                 "--file",
                 str(self.progress),
-                "--learning-objective",
-                f"Objective {index}",
-                "--note-location",
-                f"## Location {index}",
+                "--response",
+                f"Incomplete response {index}",
+                "--prompt",
+                f"Neutral prompt {index}",
             )
-        output = self.run_cli(
-            "clear-reviews", "--file", str(self.progress), "--count", "2"
+        state = self.run_cli("show", "--file", str(self.progress))["state"]
+        pending = state["pending_assessment"]
+        self.assertEqual(pending["question"], "Clearer question")
+        self.assertEqual(pending["clarification_count"], 6)
+        self.assertEqual(state["assessment_history"], [])
+
+        exhausted = self.run_cli(
+            "add-clarification",
+            "--file",
+            str(self.progress),
+            "--response",
+            "Still incomplete",
+            "--prompt",
+            "Another prompt",
+            expected_code=1,
         )
-        self.assertNotIn("state", output)
-        self.assertEqual(output["summary"]["note_review_count"], 1)
-        queue = self.run_cli("show", "--file", str(self.progress))["state"][
-            "note_review_queue"
+        self.assertIn("six-prompt", exhausted["errors"][0])
+
+        self.run_cli(
+            "record-answer",
+            "--file",
+            str(self.progress),
+            "--answer",
+            "Final independent answer",
+            "--assessment",
+            "correct",
+        )
+        history = self.run_cli("show", "--file", str(self.progress))["state"][
+            "assessment_history"
         ]
-        self.assertEqual([entry["learning_objective"] for entry in queue], ["Objective 2"])
+        self.assertEqual(len(history), 1)
+        self.assertEqual(history[0]["assessment"], "correct")
+        self.assertEqual(history[0]["gaps"], [])
+        self.assertIn("Incomplete response 0", history[0]["answer"])
+        self.assertIn("Final independent answer", history[0]["answer"])
+
+    def test_latest_assessment_can_be_corrected_with_audit_trail(self) -> None:
+        self.initialize()
+        self.run_cli(
+            "set-pending",
+            "--file",
+            str(self.progress),
+            "--question",
+            "Which rule applies?",
+            "--source-citation",
+            "Source section",
+            "--notes-citation",
+            "Notes section",
+        )
+        self.run_cli(
+            "record-answer",
+            "--file",
+            str(self.progress),
+            "--answer",
+            "The learner's original answer",
+            "--assessment",
+            "incorrect",
+            "--gap",
+            "Applied the wrong rule.",
+        )
+        self.run_cli(
+            "revise-latest",
+            "--file",
+            str(self.progress),
+            "--rationale",
+            "The cited exception applies under the stated condition.",
+            "--reason",
+            "The question was ambiguous and the original answer was valid.",
+        )
+        latest = self.run_cli("show", "--file", str(self.progress))["state"][
+            "assessment_history"
+        ][-1]
+        self.assertEqual(latest["assessment"], "correct")
+        self.assertEqual(latest["gaps"], [])
+        self.assertEqual(len(latest["revisions"]), 1)
+        self.assertEqual(
+            latest["revisions"][0]["previous_gaps"], ["Applied the wrong rule."]
+        )
 
     def test_mutations_return_compact_summary_and_show_returns_full_state(self) -> None:
         init_output = self.initialize()

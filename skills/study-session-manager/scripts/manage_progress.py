@@ -15,12 +15,19 @@ from typing import Any, Iterable
 TOP_LEVEL_KEYS = (
     "source",
     "notes",
+    "session_status",
     "pending_assessment",
     "assessment_history",
     "session_preferences",
-    "note_review_queue",
 )
-PENDING_ASSESSMENT_KEYS = ("question", "citations")
+LEGACY_TOP_LEVEL_KEYS = ("note_review_queue",)
+PENDING_ASSESSMENT_KEYS = (
+    "question",
+    "citations",
+    "learner_responses",
+    "clarification_prompts",
+    "clarification_count",
+)
 CITATION_KEYS = ("source", "notes")
 ASSESSMENT_HISTORY_KEYS = (
     "question",
@@ -28,21 +35,49 @@ ASSESSMENT_HISTORY_KEYS = (
     "assessment",
     "gaps",
     "citations",
+    "revisions",
 )
+REVISION_KEYS = ("previous_assessment", "previous_gaps", "rationale", "reason")
 SESSION_PREFERENCE_KEYS = ("assessment_emphasis", "response_format")
-NOTE_REVIEW_KEYS = (
-    "learning_objective",
-    "note_location",
-    "confirmed_explanation",
-)
-
+SESSION_PREFERENCE_OPTIONAL_KEYS = ("question_types",)
 ASSESSMENT_VALUES = ("correct", "partially_correct", "incorrect")
+SESSION_STATUS_VALUES = ("not_started", "active", "complete")
 ASSESSMENT_EMPHASIS_VALUES = (
     "conceptual understanding",
     "technical fluency",
     "balanced mix",
 )
 RESPONSE_FORMAT_VALUES = ("multiple choice", "short answer", "mix")
+CONCEPTUAL_QUESTION_TYPES = (
+    "recall",
+    "explanation",
+    "comparison",
+    "transfer",
+)
+TECHNICAL_QUESTION_TYPES = (
+    "code or command interpretation",
+    "code or result tracing",
+    "workflow sequencing",
+    "diagnosis and troubleshooting",
+)
+QUESTION_TYPE_VALUES = CONCEPTUAL_QUESTION_TYPES + TECHNICAL_QUESTION_TYPES
+
+
+def _default_question_types(emphasis: str) -> list[str]:
+    if emphasis == "conceptual understanding":
+        return list(CONCEPTUAL_QUESTION_TYPES)
+    if emphasis == "technical fluency":
+        return list(TECHNICAL_QUESTION_TYPES)
+    return list(QUESTION_TYPE_VALUES)
+
+
+def _derive_emphasis(question_types: list[str]) -> str:
+    selected = set(question_types)
+    if selected <= set(CONCEPTUAL_QUESTION_TYPES):
+        return "conceptual understanding"
+    if selected <= set(TECHNICAL_QUESTION_TYPES):
+        return "technical fluency"
+    return "balanced mix"
 
 
 class ProgressError(Exception):
@@ -68,13 +103,20 @@ def _print_json(value: Any, *, stream: Any = sys.stdout) -> None:
 
 
 def _required_object(
-    value: Any, expected_keys: tuple[str, ...], location: str, errors: list[str]
+    value: Any,
+    expected_keys: tuple[str, ...],
+    location: str,
+    errors: list[str],
+    *,
+    optional_keys: tuple[str, ...] = (),
 ) -> dict[str, Any] | None:
     if not isinstance(value, dict):
         errors.append(f"{location} must be an object")
         return None
     missing = [key for key in expected_keys if key not in value]
-    unknown = [key for key in value if key not in expected_keys]
+    unknown = [
+        key for key in value if key not in expected_keys and key not in optional_keys
+    ]
     errors.extend(f"Missing required key: {location}.{key}" for key in missing)
     errors.extend(f"Unknown key: {location}.{key}" for key in unknown)
     return value
@@ -133,6 +175,25 @@ def _validate_pending(value: Any, errors: list[str]) -> None:
         _validate_citations(
             pending["citations"], "pending_assessment.citations", errors
         )
+    for key in ("learner_responses", "clarification_prompts"):
+        if key in pending:
+            _string_list(
+                pending[key], f"pending_assessment.{key}", errors, non_empty=False
+            )
+    count = pending.get("clarification_count")
+    if not isinstance(count, int) or isinstance(count, bool) or not 0 <= count <= 6:
+        errors.append("pending_assessment.clarification_count must be from 0 to 6")
+    elif (
+        isinstance(pending.get("learner_responses"), list)
+        and isinstance(pending.get("clarification_prompts"), list)
+        and (
+            len(pending["learner_responses"]) != count
+            or len(pending["clarification_prompts"]) != count
+        )
+    ):
+        errors.append(
+            "pending assessment clarification lists must match clarification_count"
+        )
 
 
 def _validate_history(value: Any, errors: list[str]) -> None:
@@ -167,11 +228,43 @@ def _validate_history(value: Any, errors: list[str]) -> None:
                 )
         if "citations" in entry:
             _validate_citations(entry["citations"], f"{location}.citations", errors)
+        revisions = entry.get("revisions")
+        if not isinstance(revisions, list):
+            errors.append(f"{location}.revisions must be an array")
+        else:
+            for revision_index, item in enumerate(revisions):
+                revision_location = f"{location}.revisions[{revision_index}]"
+                revision = _required_object(
+                    item, REVISION_KEYS, revision_location, errors
+                )
+                if revision is None:
+                    continue
+                if revision.get("previous_assessment") not in ASSESSMENT_VALUES:
+                    errors.append(
+                        f"{revision_location}.previous_assessment must be one of: "
+                        + ", ".join(ASSESSMENT_VALUES)
+                    )
+                if "previous_gaps" in revision:
+                    _string_list(
+                        revision["previous_gaps"],
+                        f"{revision_location}.previous_gaps",
+                        errors,
+                        non_empty=True,
+                    )
+                for key in ("rationale", "reason"):
+                    if key in revision:
+                        _non_empty_string(
+                            revision[key], f"{revision_location}.{key}", errors
+                        )
 
 
 def _validate_preferences(value: Any, errors: list[str]) -> None:
     preferences = _required_object(
-        value, SESSION_PREFERENCE_KEYS, "session_preferences", errors
+        value,
+        SESSION_PREFERENCE_KEYS,
+        "session_preferences",
+        errors,
+        optional_keys=SESSION_PREFERENCE_OPTIONAL_KEYS,
     )
     if preferences is None:
         return
@@ -187,43 +280,74 @@ def _validate_preferences(value: Any, errors: list[str]) -> None:
             "session_preferences.response_format must be one of: "
             + ", ".join(RESPONSE_FORMAT_VALUES)
         )
-
-
-def _validate_review_queue(value: Any, errors: list[str]) -> None:
-    if not isinstance(value, list):
-        errors.append("note_review_queue must be an array")
-        return
-    for index, item in enumerate(value):
-        location = f"note_review_queue[{index}]"
-        entry = _required_object(item, NOTE_REVIEW_KEYS, location, errors)
-        if entry is None:
-            continue
-        for key in ("learning_objective", "note_location"):
-            if key in entry:
-                _non_empty_string(entry[key], f"{location}.{key}", errors)
-        explanation = entry.get("confirmed_explanation")
-        if explanation is not None:
-            _non_empty_string(
-                explanation, f"{location}.confirmed_explanation", errors
-            )
+    question_types = preferences.get("question_types")
+    if question_types is not None:
+        _string_list(
+            question_types,
+            "session_preferences.question_types",
+            errors,
+            non_empty=True,
+            unique=True,
+        )
+        if isinstance(question_types, list):
+            invalid = [item for item in question_types if item not in QUESTION_TYPE_VALUES]
+            if invalid:
+                errors.append(
+                    "session_preferences.question_types must contain only: "
+                    + ", ".join(QUESTION_TYPE_VALUES)
+                )
+            elif question_types and emphasis in ASSESSMENT_EMPHASIS_VALUES:
+                if _derive_emphasis(question_types) != emphasis:
+                    errors.append(
+                        "session_preferences.assessment_emphasis must match "
+                        "session_preferences.question_types"
+                    )
+            invalid = [item for item in question_types if item not in QUESTION_TYPE_VALUES]
+            if invalid:
+                errors.append(
+                    "session_preferences.question_types contains unsupported values: "
+                    + ", ".join(str(item) for item in invalid)
+                )
+            elif emphasis in ASSESSMENT_EMPHASIS_VALUES and _derive_emphasis(
+                question_types
+            ) != emphasis:
+                errors.append(
+                    "session_preferences.assessment_emphasis must match question_types"
+                )
 
 
 def validate_progress(value: Any) -> list[str]:
     errors: list[str] = []
-    progress = _required_object(value, TOP_LEVEL_KEYS, "progress", errors)
+    progress = _required_object(
+        value,
+        TOP_LEVEL_KEYS,
+        "progress",
+        errors,
+        optional_keys=LEGACY_TOP_LEVEL_KEYS,
+    )
     if progress is None:
         return errors
     for key in ("source", "notes"):
         if key in progress:
             _non_empty_string(progress[key], key, errors)
+    if (
+        "session_status" in progress
+        and progress["session_status"] not in SESSION_STATUS_VALUES
+    ):
+        errors.append(
+            "session_status must be one of: " + ", ".join(SESSION_STATUS_VALUES)
+        )
+    if (
+        progress.get("session_status") == "complete"
+        and progress.get("pending_assessment") is not None
+    ):
+        errors.append("pending_assessment must be null when session_status is complete")
     if "pending_assessment" in progress:
         _validate_pending(progress["pending_assessment"], errors)
     if "assessment_history" in progress:
         _validate_history(progress["assessment_history"], errors)
     if "session_preferences" in progress:
         _validate_preferences(progress["session_preferences"], errors)
-    if "note_review_queue" in progress:
-        _validate_review_queue(progress["note_review_queue"], errors)
     return errors
 
 
@@ -238,6 +362,12 @@ def _load(path: Path) -> dict[str, Any]:
     errors = validate_progress(value)
     if errors:
         raise ProgressError(errors)
+    value.pop("note_review_queue", None)
+    preferences = value["session_preferences"]
+    if "question_types" not in preferences:
+        preferences["question_types"] = _default_question_types(
+            preferences["assessment_emphasis"]
+        )
     return value
 
 
@@ -299,9 +429,9 @@ def _result(
             value["state"] = state
         else:
             value["summary"] = {
+                "session_status": state["session_status"],
                 "has_pending_assessment": state["pending_assessment"] is not None,
                 "assessment_count": len(state["assessment_history"]),
-                "note_review_count": len(state["note_review_queue"]),
             }
     _print_json(value)
 
@@ -313,14 +443,21 @@ def _contract() -> dict[str, Any]:
             "pending_assessment": list(PENDING_ASSESSMENT_KEYS),
             "citations": list(CITATION_KEYS),
             "assessment_history_item": list(ASSESSMENT_HISTORY_KEYS),
+            "revision": list(REVISION_KEYS),
             "session_preferences": list(SESSION_PREFERENCE_KEYS),
-            "note_review_queue_item": list(NOTE_REVIEW_KEYS),
+        },
+        "optional_keys": {
+            "session_preferences": list(SESSION_PREFERENCE_OPTIONAL_KEYS),
         },
         "field_types": {
             "source": "non-empty string",
             "notes": "non-empty string",
+            "session_status": "session_status allowed value",
             "pending_assessment": "null or pending_assessment object",
             "pending_assessment.question": "non-empty string",
+            "pending_assessment.learner_responses": "array of non-empty strings",
+            "pending_assessment.clarification_prompts": "array of non-empty strings",
+            "pending_assessment.clarification_count": "integer from 0 to 6",
             "citations.source": "non-empty array of unique non-empty strings",
             "citations.notes": "non-empty array of unique non-empty strings",
             "assessment_history": "array of assessment_history_item objects",
@@ -329,27 +466,31 @@ def _contract() -> dict[str, Any]:
             "assessment_history_item.assessment": "assessment allowed value",
             "assessment_history_item.gaps": "array of non-empty strings",
             "assessment_history_item.citations": "citations object",
+            "assessment_history_item.revisions": "array of revision objects",
+            "revision.previous_assessment": "assessment allowed value",
+            "revision.previous_gaps": "non-empty array of non-empty strings",
+            "revision.rationale": "non-empty string",
+            "revision.reason": "non-empty string",
             "session_preferences": "session_preferences object",
             "session_preferences.assessment_emphasis": (
                 "assessment_emphasis allowed value"
             ),
             "session_preferences.response_format": "response_format allowed value",
-            "note_review_queue": "array of note_review_queue_item objects",
-            "note_review_queue_item.learning_objective": "non-empty string",
-            "note_review_queue_item.note_location": "non-empty string",
-            "note_review_queue_item.confirmed_explanation": (
-                "null or non-empty string"
+            "session_preferences.question_types": (
+                "non-empty array of unique question_type allowed values"
             ),
         },
         "allowed_values": {
             "assessment": list(ASSESSMENT_VALUES),
+            "session_status": list(SESSION_STATUS_VALUES),
             "assessment_emphasis": list(ASSESSMENT_EMPHASIS_VALUES),
             "response_format": list(RESPONSE_FORMAT_VALUES),
+            "question_type": list(QUESTION_TYPE_VALUES),
         },
         "defaults": {
+            "session_status": "not_started",
             "pending_assessment": None,
             "assessment_history": [],
-            "note_review_queue": [],
         },
         "constraints": {
             "additional_properties": False,
@@ -385,8 +526,9 @@ def build_parser() -> argparse.ArgumentParser:
     init_parser.add_argument("--source", required=True)
     init_parser.add_argument("--notes", required=True)
     init_parser.add_argument(
-        "--assessment-emphasis", required=True, choices=ASSESSMENT_EMPHASIS_VALUES
+        "--assessment-emphasis", choices=ASSESSMENT_EMPHASIS_VALUES
     )
+    init_parser.add_argument("--question-type", action="append", choices=QUESTION_TYPE_VALUES)
     init_parser.add_argument(
         "--response-format", required=True, choices=RESPONSE_FORMAT_VALUES
     )
@@ -399,6 +541,11 @@ def build_parser() -> argparse.ArgumentParser:
     show_parser = subparsers.add_parser("show", help="Print validated progress")
     _add_file_argument(show_parser)
 
+    complete_parser = subparsers.add_parser(
+        "complete", help="Mark fully assessed coverage as complete"
+    )
+    _add_file_argument(complete_parser)
+
     pending_parser = subparsers.add_parser(
         "set-pending", help="Record a pending assessment"
     )
@@ -406,6 +553,26 @@ def build_parser() -> argparse.ArgumentParser:
     _add_text_input(pending_parser, "question", required=True)
     pending_parser.add_argument("--source-citation", action="append", required=True)
     pending_parser.add_argument("--notes-citation", action="append", required=True)
+
+    replace_parser = subparsers.add_parser(
+        "replace-question", help="Replace a pending question without using a clarification"
+    )
+    _add_file_argument(replace_parser)
+    _add_text_input(replace_parser, "question", required=True)
+
+    clarification_parser = subparsers.add_parser(
+        "add-clarification", help="Persist one unresolved response and neutral prompt"
+    )
+    _add_file_argument(clarification_parser)
+    _add_text_input(clarification_parser, "response", required=True)
+    _add_text_input(clarification_parser, "prompt", required=True)
+
+    revision_parser = subparsers.add_parser(
+        "revise-latest", help="Correct the latest assessment to correct"
+    )
+    _add_file_argument(revision_parser)
+    _add_text_input(revision_parser, "rationale", required=True)
+    _add_text_input(revision_parser, "reason", required=True)
 
     answer_parser = subparsers.add_parser(
         "record-answer", help="Assess the answer to the pending question"
@@ -422,27 +589,41 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_file_argument(preferences_parser)
     preferences_parser.add_argument(
-        "--assessment-emphasis", required=True, choices=ASSESSMENT_EMPHASIS_VALUES
+        "--assessment-emphasis", choices=ASSESSMENT_EMPHASIS_VALUES
+    )
+    preferences_parser.add_argument(
+        "--question-type", action="append", choices=QUESTION_TYPE_VALUES
     )
     preferences_parser.add_argument(
         "--response-format", required=True, choices=RESPONSE_FORMAT_VALUES
     )
 
-    review_parser = subparsers.add_parser(
-        "enqueue-review", help="Add a teach-me note-review entry"
-    )
-    _add_file_argument(review_parser)
-    review_parser.add_argument("--learning-objective", required=True)
-    review_parser.add_argument("--note-location", required=True)
-    _add_text_input(review_parser, "confirmed-explanation", required=False)
-
-    clear_parser = subparsers.add_parser(
-        "clear-reviews", help="Remove reviewed entries from the front of the queue"
-    )
-    _add_file_argument(clear_parser)
-    clear_parser.add_argument("--count", required=True, type=int)
-
     return parser
+
+
+def _preference_values(args: argparse.Namespace) -> dict[str, Any]:
+    question_types = args.question_type
+    if question_types is None:
+        if args.assessment_emphasis is None:
+            raise ProgressError(
+                "Provide at least one --question-type or --assessment-emphasis"
+            )
+        question_types = _default_question_types(args.assessment_emphasis)
+    if len(question_types) != len(set(question_types)):
+        raise ProgressError("--question-type values must be unique")
+    derived_emphasis = _derive_emphasis(question_types)
+    if (
+        args.assessment_emphasis is not None
+        and args.assessment_emphasis != derived_emphasis
+    ):
+        raise ProgressError(
+            "--assessment-emphasis does not match the selected question types"
+        )
+    return {
+        "assessment_emphasis": derived_emphasis,
+        "question_types": question_types,
+        "response_format": args.response_format,
+    }
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -464,13 +645,10 @@ def main(argv: list[str] | None = None) -> int:
             state = {
                 "source": args.source,
                 "notes": args.notes,
+                "session_status": "not_started",
                 "pending_assessment": None,
                 "assessment_history": [],
-                "session_preferences": {
-                    "assessment_emphasis": args.assessment_emphasis,
-                    "response_format": args.response_format,
-                },
-                "note_review_queue": [],
+                "session_preferences": _preference_values(args),
             }
             _write_atomic(path, state)
             _result("init", path, state)
@@ -485,7 +663,20 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "show":
             _result("show", path, state, include_state=True)
             return 0
+        if args.command == "complete":
+            if state["pending_assessment"] is not None:
+                raise ProgressError(
+                    "Cannot complete a session with a pending assessment"
+                )
+            if state["session_status"] == "not_started":
+                raise ProgressError("Cannot complete a session that has not started")
+            state["session_status"] = "complete"
+            _write_atomic(path, state)
+            _result(args.command, path, state)
+            return 0
         if args.command == "set-pending":
+            if state["session_status"] == "complete":
+                raise ProgressError("A completed session cannot accept new questions")
             if state["pending_assessment"] is not None:
                 raise ProgressError(
                     "pending_assessment is already populated; record its answer first"
@@ -499,12 +690,37 @@ def main(argv: list[str] | None = None) -> int:
                     "source": args.source_citation,
                     "notes": args.notes_citation,
                 },
+                "learner_responses": [],
+                "clarification_prompts": [],
+                "clarification_count": 0,
             }
+            state["session_status"] = "active"
+        elif args.command == "replace-question":
+            pending = state["pending_assessment"]
+            if pending is None:
+                raise ProgressError("No pending assessment exists")
+            pending["question"] = _read_text_argument(
+                args.question, args.question_file, "question"
+            )
+        elif args.command == "add-clarification":
+            pending = state["pending_assessment"]
+            if pending is None:
+                raise ProgressError("No pending assessment exists")
+            if pending["clarification_count"] >= 6:
+                raise ProgressError("The six-prompt clarification limit is exhausted")
+            response = _read_text_argument(
+                args.response, args.response_file, "response"
+            )
+            prompt = _read_text_argument(args.prompt, args.prompt_file, "prompt")
+            pending["learner_responses"].append(response)
+            pending["clarification_prompts"].append(prompt)
+            pending["clarification_count"] += 1
         elif args.command == "record-answer":
             pending = state["pending_assessment"]
             if pending is None:
                 raise ProgressError("No pending assessment exists")
-            answer = _read_text_argument(args.answer, args.answer_file, "answer")
+            final_answer = _read_text_argument(args.answer, args.answer_file, "answer")
+            answer = "\n\n".join(pending["learner_responses"] + [final_answer])
             if args.assessment == "correct" and args.gap:
                 raise ProgressError("A correct assessment cannot include gaps")
             if args.assessment != "correct" and not args.gap:
@@ -518,41 +734,36 @@ def main(argv: list[str] | None = None) -> int:
                     "assessment": args.assessment,
                     "gaps": args.gap,
                     "citations": pending["citations"],
+                    "revisions": [],
                 }
             )
             state["pending_assessment"] = None
-        elif args.command == "set-preferences":
-            state["session_preferences"] = {
-                "assessment_emphasis": args.assessment_emphasis,
-                "response_format": args.response_format,
-            }
-        elif args.command == "enqueue-review":
-            explanation = None
-            if (
-                args.confirmed_explanation is not None
-                or args.confirmed_explanation_file is not None
-            ):
-                explanation = _read_text_argument(
-                    args.confirmed_explanation,
-                    args.confirmed_explanation_file,
-                    "confirmed explanation",
+        elif args.command == "revise-latest":
+            if state["pending_assessment"] is not None:
+                raise ProgressError(
+                    "Resolve the pending assessment before revising history"
                 )
-            state["note_review_queue"].append(
+            if not state["assessment_history"]:
+                raise ProgressError("No assessment exists to revise")
+            latest = state["assessment_history"][-1]
+            if latest["assessment"] == "correct":
+                raise ProgressError("The latest assessment is already correct")
+            rationale = _read_text_argument(
+                args.rationale, args.rationale_file, "rationale"
+            )
+            reason = _read_text_argument(args.reason, args.reason_file, "reason")
+            latest["revisions"].append(
                 {
-                    "learning_objective": args.learning_objective,
-                    "note_location": args.note_location,
-                    "confirmed_explanation": explanation,
+                    "previous_assessment": latest["assessment"],
+                    "previous_gaps": latest["gaps"],
+                    "rationale": rationale,
+                    "reason": reason,
                 }
             )
-        elif args.command == "clear-reviews":
-            if args.count < 1:
-                raise ProgressError("--count must be at least 1")
-            queue_length = len(state["note_review_queue"])
-            if args.count > queue_length:
-                raise ProgressError(
-                    f"Cannot clear {args.count} reviews; queue contains {queue_length}"
-                )
-            del state["note_review_queue"][: args.count]
+            latest["assessment"] = "correct"
+            latest["gaps"] = []
+        elif args.command == "set-preferences":
+            state["session_preferences"] = _preference_values(args)
         else:
             raise ProgressError(f"Unsupported command: {args.command}")
 

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test Prep Setup"
+  short_description: "Create a validated test preparation workspace"
+  default_prompt: "Use $test-prep-setup to set up a test preparation folder from my tested topics and study materials."

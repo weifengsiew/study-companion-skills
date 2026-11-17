@@ -2,28 +2,31 @@
 
 **Stop just reading. Start understanding.**
 
-Turn textbooks, articles, course materials, and technical documents into reviewed study notes—then learn with an adaptive AI tutor that teaches, tests your understanding, and remembers your progress.
+Turn textbooks, articles, course materials, and technical documents into reviewed study notes—then learn and prepare for tests with an adaptive AI tutor that teaches, quizzes, targets knowledge gaps, and remembers your progress.
 
 ## From passive reading to active learning
 
 Reading something isn't the same as understanding it. And a summary alone can't tell you what you can actually explain, remember, or apply.
 
-**Study Companion Skills combines three main workflows to bridge that gap:**
+**Study Companion Skills combines four main workflows to bridge that gap:**
 
-- **`notes-generator` — Turn your sources into study-ready notes.** Creates reviewed, source-grounded notes with a big-picture orientation, practical takeaway, focused questions, explanatory answers, and useful learning aids.
-- **`teach-me` — Learn with an adaptive tutor.** Teaches concepts in manageable steps, tests your understanding, identifies knowledge gaps, and adjusts its explanations and questions based on your responses.
-- **`quiz-me` — Test what you understand.** Runs a question-first assessment, identifies knowledge gaps, and explains only what needs improvement.
+![Study Companion Skills workflow: source materials become structured notes, adaptive teaching, targeted quizzes, and repeated gap-focused test preparation.](docs/images/study-companion-workflows.png)
+
+- **`notes-generator` — Turn your sources into clear, useful study notes.** Creates well-structured, source-backed notes that cover the big picture, key takeaways, important questions and answers, and helpful learning aids.
+- **`teach-me` — Learn step by step with a tutor that adapts to you.** Breaks down concepts into manageable steps, checks your understanding, spots knowledge gaps, and adjusts its teaching based on your answers.
+- **`quiz-me` — Find out what you know and what you don't.** Tests your understanding through targeted questions, identifies what you're struggling with, and explains the areas that need more work.
+- **`prepare-for-test` — Get test-ready by focusing on what you don't know yet.** Quizzes you on all the test material, then focuses each new round on what you got wrong until you've mastered everything.
 
 **What makes it different?**
 
 - **Active learning, not passive rereading.** Test your ability to recall, explain, compare, diagnose, and apply what you've learned.
 - **Teaching that adapts to you.** Get simpler explanations, alternative approaches, and targeted follow-up questions when you're struggling.
-- **Notes that evolve with your understanding.** During `teach-me`, after every three mastered concept groups, your tutor compares confirmed explanations with your notes and proposes worthwhile improvements for your approval.
 - **Progress that carries across sessions.** Your concept coverage, assessments, and next question are saved so you can pick up exactly where you left off.
+- **Reusable transcripts.** When a teaching or quiz session pauses or ends, you can choose to save the session transcript to create questions or study notes later.
 
 **The goal isn't just better notes. It's knowing what you truly understand—and what you still need to learn.**
 
-## Install with one prompt
+## Fast and easy setup
 
 Ready to turn your next reading into an interactive learning experience?
 
@@ -34,7 +37,7 @@ Ready to turn your next reading into an interactive learning experience?
 Paste this into Claude Code:
 
 ```text
-Install Study Companion Skills from the GitHub repository weifengsiew/study-companion-skills as a user plugin, so it is available in all my projects. Add its marketplace if needed, then confirm that the plugin is enabled.
+Install Study Companion Skills from the GitHub repository weifengsiew/study-companion-skills as a user plugin, so it is available in all my projects. Add its marketplace if needed, then confirm that the plugin is enabled. Explain the available study workflows, what each one is for, and how I can start using them.
 ```
 
 ### Codex
@@ -42,56 +45,29 @@ Install Study Companion Skills from the GitHub repository weifengsiew/study-comp
 Paste this into Codex:
 
 ```text
-Install Study Companion Skills as a plugin from the GitHub repository weifengsiew/study-companion-skills. Add its marketplace if needed, install and enable the plugin, then tell me to start a new chat.
+Install Study Companion Skills as a plugin from the GitHub repository weifengsiew/study-companion-skills. Add its marketplace if needed, install and enable the plugin, then tell me to start a new chat. Explain the available study workflows, what each one is for, and how I can start using them.
 ```
 
 ### Start learning
 
-Once installed, turn your source material into an interactive learning experience:
+Provide accessible source material, then choose a workflow:
 
-1. **Choose your material.** Put the textbook chapter, article, course handout, or document you want to study in a file your assistant can access.
-2. **Generate your study notes.** Run `notes-generator` with the source file path. By default, it saves the reviewed notes to `source_dir/notes/<source-stem>-notes.md`. If suitable notes already exist, you can skip this step.
-3. **Choose how to learn.** Run `teach-me` for guided instruction or `quiz-me` for question-first assessment, using the exact source and notes paths reported by `notes-generator` (or the paths to your existing notes). At the start of each session, choose conceptual understanding, technical fluency, or a balanced mix, then choose multiple choice, short answer, or a mix.
-4. **Learn at your own pace.** Work through one manageable concept group at a time. Answer questions, ask for clarification, request examples, test yourself, or pause whenever you need.
-5. **Pick up where you left off.** Return later and resume from your saved progress file without starting over.
+- Use `notes-generator` to create study notes.
+- Use `teach-me` for guided learning.
+- Use `quiz-me` to test your understanding.
+- Use `prepare-for-test` to cover the tested material and focus subsequent quizzes on identified gaps.
 
-**Note:** `notes-generator` performs multiple review passes, so note generation can take some time.
-
-**Install Study Companion Skills and turn your next reading session into real learning.**
-
-## Included skills
-
-### Public workflows
-
-- `teach-me` sets up a persistent study session from source material and matching notes.
-- `quiz-me` sets up a persistent question-first assessment session and explains identified gaps.
-- `notes-generator` creates reviewed learning notes from source material, subsection by subsection.
-
-### Internal workflows
-
-- `teach-loop`
-- `quiz-loop`
-- `study-session-manager`
-- `learning-preference-manager`
-- `question-generator`
-- `answer-generator`
-- `scope-reviewer`
-- `learning-aid-creator`
-- `big-picture-generator`
-- `practical-takeaway-generator`
-- `notes-formatter`
-- `duplication-reviewer`
-- `alignment-reviewer`
-- `transferability-reviewer`
-
-The plugin installs every workflow together. On OpenAI surfaces, only the three public workflows are selected automatically. In Claude Code, narrow internal descriptions guide ordinary requests through the public workflows while preserving delegated and explicit use.
+You can use existing notes with the learning workflows. If you do not provide notes, the source material can be used instead. Your progress is saved, so you can pause and resume later.
 
 ## Requirements
 
 - Codex or Claude Code with plugin support.
-- Source material supplied by the learner. The `teach-me` and `quiz-me` workflows will not generate notes without it.
+- Source material supplied by the learner.
+- Notes supplied by the learner or generated through a separate `notes-generator` request. If the learner declines to provide notes, the source is used as the notes.
 
-## Install in Codex
+## Codex setup and management
+
+### Install
 
 Add this repository as a plugin marketplace from your terminal:
 
@@ -117,27 +93,17 @@ codex plugin marketplace upgrade study-companion-skills
 
 Open `/plugins` in Codex to confirm the installed version, then start a new chat.
 
-### Use in Codex
+### Uninstall
 
-Generate notes:
+Remove the plugin from your terminal:
 
-```text
-Use $notes-generator to turn <source-path> into learning notes.
+```bash
+codex plugin remove study-companion-skills@study-companion-skills
 ```
 
-Start a guided study session:
+## Claude Code setup and management
 
-```text
-Use $teach-me with source <source-path> and notes <notes-path>.
-```
-
-Start a question-first quiz session:
-
-```text
-Use $quiz-me with source <source-path> and notes <notes-path>.
-```
-
-## Install in Claude Code
+### Install
 
 In Claude Code, ask:
 
@@ -163,7 +129,51 @@ claude --plugin-dir ./study-companion-skills
 
 If Claude Code is already open, run `/reload-plugins` to load the plugin. Otherwise, it loads the next time you start Claude Code.
 
-### Use in Claude Code
+### Update in Claude Code
+
+Third-party marketplaces have automatic updates turned off by default. To update the plugin from your terminal, run:
+
+```bash
+claude plugin update study-companion-skills@study-companion-skills
+```
+
+### Uninstall
+
+Remove the user-scoped plugin from your terminal:
+
+```bash
+claude plugin uninstall study-companion-skills@study-companion-skills --scope user
+```
+
+## Usage
+
+### Codex
+
+Generate notes:
+
+```text
+Use $notes-generator to turn <source-path> into learning notes.
+```
+
+Start a guided study session:
+
+```text
+Use $teach-me with source <source-path> and notes <notes-path>.
+```
+
+Start a question-first quiz session:
+
+```text
+Use $quiz-me with source <source-path> and notes <notes-path>.
+```
+
+Prepare for a test:
+
+```text
+Use $prepare-for-test to set up and run preparation from my tested topics, sources, and notes.
+```
+
+### Claude Code
 
 Skills installed through the plugin are namespaced with `study-companion-skills`:
 
@@ -179,15 +189,41 @@ Skills installed through the plugin are namespaced with `study-companion-skills`
 /study-companion-skills:quiz-me Use source <source-path> and notes <notes-path>.
 ```
 
-Use `teach-me`, `quiz-me`, or `notes-generator` as the normal entry points. Internal workflows remain available for delegation and explicit advanced use; their descriptions identify them as internal to discourage accidental routing.
-
-### Update in Claude Code
-
-Third-party marketplaces have automatic updates turned off by default. To update the plugin from your terminal, run:
-
-```bash
-claude plugin update study-companion-skills@study-companion-skills
+```text
+/study-companion-skills:prepare-for-test Set up and run preparation from my tested topics, sources, and notes.
 ```
+
+Use `teach-me`, `quiz-me`, `notes-generator`, or `prepare-for-test` as the normal entry points. Internal workflows, including `test-prep-setup`, remain available for delegation and explicit advanced use; their descriptions identify them as internal to discourage accidental routing.
+
+## Included skills
+
+### Public workflows
+
+- `teach-me` sets up a persistent study session from source material and learner-provided notes, or uses the source as the notes when needed.
+- `quiz-me` sets up a persistent question-first assessment session and explains identified gaps.
+- `notes-generator` creates reviewed learning notes from source material, subsection by subsection.
+- `prepare-for-test` first quizzes all tested material, then creates follow-up quizzes focused only on recorded gaps until none remain.
+
+### Internal workflows
+
+- `teach-loop`
+- `quiz-loop`
+- `gaps-extractor`
+- `test-prep-setup` interviews the learner about tested and excluded topics, creates or validates `test-topics.md`, verifies source and notes paths, and initializes persistent quiz progress for `prepare-for-test`.
+- `study-session-manager`
+- `learning-preference-manager`
+- `question-generator`
+- `answer-generator`
+- `scope-reviewer`
+- `learning-aid-creator`
+- `big-picture-generator`
+- `practical-takeaway-generator`
+- `notes-formatter`
+- `duplication-reviewer`
+- `alignment-reviewer`
+- `transferability-reviewer`
+
+The plugin installs every workflow together. On OpenAI surfaces, only the four public workflows are selected automatically. In Claude Code, narrow internal descriptions guide ordinary requests through the public workflows while preserving delegated and explicit use.
 
 ## Repository structure
 
@@ -204,6 +240,8 @@ study-companion-skills/
     ├── teach-me/
     ├── quiz-me/
     ├── notes-generator/
+    ├── test-prep-setup/
+    ├── prepare-for-test/
     └── supporting skills...
 ```
 

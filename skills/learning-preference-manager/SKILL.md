@@ -7,7 +7,7 @@ description: Internal support for notes-generator, teach-me, and quiz-me. Manage
 
 ## Profile
 
-Use the supplied profile path, then `$STUDY_COMPANION_HOME/learning-preferences.json`, or otherwise `~/.study-companion/learning-preferences.json`. Ask before creating the profile and report if it cannot be accessed. Keep the preference profile under 50 KB.
+Use the supplied profile path, then `$STUDY_COMPANION_HOME/learning-preferences.json`, or otherwise `~/.study-companion/learning-preferences.json`. Before creating the profile, tell the learner its exact path and proceed only after explicit approval; confirm the path after creation and report if it cannot be accessed. Keep the preference profile under 50 KB.
 
 Store preferences as plain strings under exactly three top-level sections, without predefined sub-keys:
 

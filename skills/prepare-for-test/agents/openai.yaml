@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prepare for Test"
+  short_description: "Run iterative quizzes until gaps are closed"
+  default_prompt: "Use $prepare-for-test to run multi-pass test preparation from my source materials and notes."

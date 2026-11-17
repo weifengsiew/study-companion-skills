@@ -9,8 +9,12 @@ Use this skill when a learner wants a persistent interactive study session using
 
 ## 1. Manage study session
 
-Use `study-session-manager` for session setup, progress persistence, preference loading, note updates, and session ending. Use the exact source and notes paths, validated progress state, and relevant confirmed preferences it returns. Never edit progress JSON directly.
+Use `study-session-manager` for session setup, progress persistence, preference loading, and session ending. Use the exact source and notes paths, validated progress state, and relevant confirmed preferences it returns. Neither skill may invoke `notes-generator`: if notes are missing, ask the learner to provide notes or invoke `notes-generator` themselves and return its reported path; if they refuse, use the source path as the notes path. Never edit progress JSON directly.
 
 ## 2. Use tutoring skill
 
 Use `teach-loop` for all live instruction, including explanations, clarifications, questions, assessment, adaptation, pacing, and instructional state. Pass relevant confirmed preferences. For each turn, load only the current concept group's note sections, targeted source excerpts needed for corroboration or examples, and compact progress state. Retrieve more only when the learner advances or asks a cross-topic question.
+
+## 3. End session
+
+On pause, early end, or normal completion, use `study-session-manager` to save progress and offer optional transcript persistence.
