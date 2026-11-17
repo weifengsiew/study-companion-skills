@@ -73,6 +73,27 @@ class ManageTestPlanTests(unittest.TestCase):
         checked = self.run_cli("check", "--root", str(self.root))
         self.assertEqual(json.loads(checked.stdout), plan)
 
+    def test_uses_balanced_short_answer_defaults(self) -> None:
+        arguments = list(self.init_arguments())
+        question_start = arguments.index("--question-type")
+        topic_start = arguments.index("--topic")
+        del arguments[question_start:topic_start]
+        self.run_cli(*arguments)
+        progress = self.root / "progress/pass_01/progress/topic-01-progress.json"
+        preferences = json.loads(progress.read_text())["session_preferences"]
+        self.assertEqual(preferences["assessment_emphasis"], "balanced mix")
+        self.assertEqual(preferences["response_format"], "short answer")
+        self.assertEqual(preferences["question_types"], [
+            "recall",
+            "explanation",
+            "comparison",
+            "transfer",
+            "code or command interpretation",
+            "code or result tracing",
+            "workflow sequencing",
+            "diagnosis and troubleshooting",
+        ])
+
     def test_refuses_existing_setup(self) -> None:
         self.run_cli(*self.init_arguments())
         result = self.run_cli(*self.init_arguments(), expected_code=1)

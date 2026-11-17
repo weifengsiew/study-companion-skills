@@ -37,7 +37,7 @@ Ready to turn your next reading into an interactive learning experience?
 Paste this into Claude Code:
 
 ```text
-Install Study Companion Skills from the GitHub repository weifengsiew/study-companion-skills as a user plugin, so it is available in all my projects. Add its marketplace if needed, then confirm that the plugin is enabled. Introduce the available study workflows (`notes-generator`, `teach-me`, `quiz-me`, and `prepare-for-test`), explain what each one does and how it benefits me, and show me how to start using them.
+Install Study Companion Skills from the GitHub repository weifengsiew/study-companion-skills as a user plugin, so it is available in all my projects. Add its marketplace if needed, then confirm that the plugin is enabled. Introduce the four available study workflows one at a time: `notes-generator`, `teach-me`, `quiz-me`, and `prepare-for-test`. For each workflow, briefly explain what it does, how it supports my learning, and when I should use it before introducing the next one.
 ```
 
 ### Codex
@@ -45,7 +45,7 @@ Install Study Companion Skills from the GitHub repository weifengsiew/study-comp
 Paste this into Codex:
 
 ```text
-Install Study Companion Skills as a plugin from the GitHub repository weifengsiew/study-companion-skills. Add its marketplace if needed, install and enable the plugin, then tell me to start a new chat. Introduce the available study workflows (`notes-generator`, `teach-me`, `quiz-me`, and `prepare-for-test`), explain what each one does and how it benefits me, and show me how to start using them.
+Install Study Companion Skills as a plugin from the GitHub repository weifengsiew/study-companion-skills. Add its marketplace if needed, install and enable the plugin, then tell me to start a new chat. Introduce the four available study workflows one at a time: `notes-generator`, `teach-me`, `quiz-me`, and `prepare-for-test`. For each workflow, briefly explain what it does, how it supports my learning, and when I should use it before introducing the next one.
 ```
 
 ### Start learning

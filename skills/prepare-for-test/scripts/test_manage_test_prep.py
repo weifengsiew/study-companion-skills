@@ -189,6 +189,28 @@ class ManageTestPrepTests(unittest.TestCase):
             ["transfer", "diagnosis and troubleshooting"],
         )
 
+    def test_targeted_pass_uses_defaults(self) -> None:
+        self.answer_and_complete(self.progress, "incorrect", "Missing mechanism.")
+        self.answer_and_complete(self.progress_two, "correct")
+        self.run_cli(
+            EXTRACT,
+            str(self.root / "progress/pass_01/progress"),
+            str(self.root / "progress/pass_02/gaps"),
+        )
+        self.run_cli(
+            SCRIPT,
+            "init-pass",
+            "--root",
+            str(self.root),
+            "--pass-number",
+            "2",
+        )
+        progress = self.root / "progress/pass_02/progress/topic-01-progress.json"
+        preferences = json.loads(progress.read_text())["session_preferences"]
+        self.assertEqual(preferences["assessment_emphasis"], "balanced mix")
+        self.assertEqual(preferences["response_format"], "short answer")
+        self.assertEqual(len(preferences["question_types"]), 8)
+
 
 if __name__ == "__main__":
     unittest.main()

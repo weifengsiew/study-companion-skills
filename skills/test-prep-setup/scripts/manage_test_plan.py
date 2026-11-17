@@ -37,6 +37,8 @@ QUESTION_TYPES = (
     "workflow sequencing",
     "diagnosis and troubleshooting",
 )
+DEFAULT_ASSESSMENT_EMPHASIS = "balanced mix"
+DEFAULT_RESPONSE_FORMAT = "short answer"
 
 
 def parser() -> argparse.ArgumentParser:
@@ -51,7 +53,7 @@ def parser() -> argparse.ArgumentParser:
     )
     initialize.add_argument("--question-type", action="append", choices=QUESTION_TYPES)
     initialize.add_argument(
-        "--response-format", required=True, choices=RESPONSE_FORMATS
+        "--response-format", default=DEFAULT_RESPONSE_FORMAT, choices=RESPONSE_FORMATS
     )
     initialize.add_argument(
         "--topic",
@@ -219,6 +221,10 @@ def main() -> None:
         if args.assessment_emphasis is not None:
             preference_arguments.extend(
                 ("--assessment-emphasis", args.assessment_emphasis)
+            )
+        elif not args.question_type:
+            preference_arguments.extend(
+                ("--assessment-emphasis", DEFAULT_ASSESSMENT_EMPHASIS)
             )
         for question_type in args.question_type or []:
             preference_arguments.extend(("--question-type", question_type))

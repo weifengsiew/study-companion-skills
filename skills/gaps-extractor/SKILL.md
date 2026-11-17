@@ -7,7 +7,7 @@ description: Internal extraction support for prepare-for-test. Create immutable 
 
 Extract already recorded gaps without assessing answers, inferring gaps, or changing progress. An immediate correct retry does not erase an earlier gap.
 
-Before writing an output file or directory, identify every exact planned path. When delegated, return them to the caller, which must inform the learner and obtain explicit approval before extraction; when invoked directly, do this yourself. After creation, return the exact created paths.
+When delegated by `prepare-for-test`, its approval covers new gap manifests under the approved preparation root; return created paths to the caller without requesting approval again. When invoked directly, show every planned output path and obtain explicit approval before writing. After creation, return the exact created paths.
 
 ## Commands
 

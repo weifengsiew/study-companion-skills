@@ -5,6 +5,14 @@ description: Create per-subsection learning notes by orchestrating question, ans
 
 # Notes Generator
 
+## Open
+
+At the start of a directly requested workflow, say exactly:
+
+> Hi! I’ll help you create clear, source-backed study notes. The notes will cover the big picture, key takeaways, important questions and answers, and useful learning aids. What source material would you like to use?
+
+If the learner has already supplied all required source material, omit only the final question and continue with it.
+
 ## Load learning preferences
 
 Before generating or revising notes, invoke `learning-preference-manager` using the host's syntax and load confirmed `shared` and `notes` preferences. Continue if unavailable. Apply its precedence and pass relevant preferences to affected creation and review stages.
