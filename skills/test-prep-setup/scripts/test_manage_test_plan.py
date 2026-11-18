@@ -63,7 +63,7 @@ class ManageTestPlanTests(unittest.TestCase):
         plan = json.loads(self.run_cli(*self.init_arguments()).stdout)
         self.assertEqual(plan["topics_file"], str(self.root / "test-topics.md"))
         self.assertEqual((self.root / "test-topics.md").read_text(), "# Test Topics\n")
-        progress = self.root / "progress/pass_01/progress/topic-01-progress.json"
+        progress = self.root / "progress/topic-01/pass_01/progress.json"
         state = json.loads(progress.read_text())
         self.assertEqual(state["session_status"], "not_started")
         self.assertEqual(
@@ -79,7 +79,7 @@ class ManageTestPlanTests(unittest.TestCase):
         topic_start = arguments.index("--topic")
         del arguments[question_start:topic_start]
         self.run_cli(*arguments)
-        progress = self.root / "progress/pass_01/progress/topic-01-progress.json"
+        progress = self.root / "progress/topic-01/pass_01/progress.json"
         preferences = json.loads(progress.read_text())["session_preferences"]
         self.assertEqual(preferences["assessment_emphasis"], "balanced mix")
         self.assertEqual(preferences["response_format"], "short answer")

@@ -202,7 +202,7 @@ Use `teach-me`, `quiz-me`, `notes-generator`, or `prepare-for-test` as the norma
 - `teach-me` sets up a persistent study session from source material and learner-provided notes, or uses the source as the notes when needed.
 - `quiz-me` sets up a persistent question-first assessment session and explains identified gaps.
 - `notes-generator` creates reviewed learning notes from source material, subsection by subsection.
-- `prepare-for-test` first quizzes all tested material, then creates follow-up quizzes focused only on recorded gaps until none remain.
+- `prepare-for-test` completes each topic's initial quiz and gap-focused follow-ups before moving to the next topic.
 
 ### Internal workflows
 

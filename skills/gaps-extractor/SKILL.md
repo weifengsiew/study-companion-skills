@@ -19,12 +19,4 @@ python3 scripts/extract_gaps.py <progress-file> [--output <gaps-file>]
 
 Without `--output`, return the printed JSON. Use `--force` to replace an existing output only after explicit approval.
 
-For a completed `prepare-for-test` pass:
-
-```bash
-python3 scripts/extract_gap_directory.py <completed-pass-progress-dir> <new-pass-gaps-dir>
-```
-
-Directory mode requires a new output directory. It creates ordered, provenance-bearing `<topic>-gaps.json` files only for topics with gaps and an aggregate `_manifest.json`. Never regenerate or replace this directory.
-
 Present extracted data as recorded evidence, not a new diagnosis. Distinguish retained assessments from individual gap statements.

@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import subprocess
 import sys
 from pathlib import Path
@@ -14,7 +13,6 @@ from typing import Any
 
 SKILLS = Path(__file__).parents[2]
 PROGRESS_MANAGER = SKILLS / "study-session-manager/scripts/manage_progress.py"
-PASS_NAME = re.compile(r"^pass_(\d+)$")
 ASSESSMENT_EMPHASIS = (
     "conceptual understanding",
     "technical fluency",
@@ -45,6 +43,7 @@ def parser() -> argparse.ArgumentParser:
     )
     initialize.add_argument("--root", required=True, type=Path)
     initialize.add_argument("--pass-number", required=True, type=int)
+    initialize.add_argument("--topic", required=True)
     initialize.add_argument(
         "--assessment-emphasis", choices=ASSESSMENT_EMPHASIS
     )
@@ -75,158 +74,97 @@ def manager(*arguments: str) -> dict[str, Any]:
     return json.loads(result.stdout)
 
 
-def pass_path(root: Path, number: int) -> Path:
-    return root / "progress" / f"pass_{number:02d}"
-
-
-def highest_pass(root: Path) -> int:
-    progress_root = root / "progress"
-    numbers = [
-        int(match.group(1))
-        for path in progress_root.iterdir()
-        if path.is_dir() and (match := PASS_NAME.fullmatch(path.name))
-    ]
-    if not numbers:
-        raise ValueError("no numbered pass directories found")
-    return max(numbers)
-
-
-def entries(root: Path, number: int) -> tuple[list[dict[str, Any]], dict[str, Any] | None]:
-    directory = pass_path(root, number)
-    if number == 1:
-        plan = load_json(root / "test-plan.json")
-        return [
-            {
-                **topic,
-                "progress": directory / "progress" / f"{topic['id']}-progress.json",
-                "gaps": None,
-            }
-            for topic in plan["topics"]
-        ], None
-
-    gaps_directory = directory / "gaps"
-    manifest_path = gaps_directory / "_manifest.json"
-    if not manifest_path.is_file():
-        return [], None
-    manifest = load_json(manifest_path)
-    result = []
-    for item in manifest["files"]:
-        gaps_path = gaps_directory / item["gaps_file"]
-        gap_data = load_json(gaps_path)
-        topic_id = item["gaps_file"].removesuffix("-gaps.json")
-        result.append(
-            {
-                "id": topic_id,
-                "source": gap_data["source"],
-                "notes": gap_data["notes"],
-                "progress": directory / "progress" / f"{topic_id}-progress.json",
-                "gaps": gaps_path,
-            }
-        )
-    return result, manifest
+def pass_path(root: Path, topic_id: str, number: int) -> Path:
+    return root / "progress" / topic_id / f"pass_{number:02d}"
 
 
 def status(root: Path) -> dict[str, Any]:
-    number = highest_pass(root)
-    pass_directory = pass_path(root, number)
-    topic_entries, manifest = entries(root, number)
+    plan = load_json(root / "test-plan.json")
+    for topic in plan["topics"]:
+        number = 1
+        while True:
+            directory = pass_path(root, topic["id"], number)
+            progress = directory / "progress.json"
+            gaps = None if number == 1 else directory / "gaps.json"
+            if not progress.is_file():
+                return {
+                    "next_action": "setup_required" if number == 1 else "initialize_pass",
+                    "pass_number": number,
+                    "topic": topic["id"],
+                }
 
-    if number > 1 and manifest is None:
-        previous = pass_path(root, number - 1)
-        return {
-            "next_action": "extract_gaps",
-            "completed_pass": number - 1,
-            "progress_directory": str(previous / "progress"),
-            "gaps_directory": str(pass_directory / "gaps"),
-        }
-    if manifest is not None and manifest["assessment_count"] == 0:
-        return {
-            "next_action": "workflow_complete",
-            "completed_pass": number - 1,
-            "manifest": str(pass_directory / "gaps" / "_manifest.json"),
-        }
+            state = manager("show", "--file", str(progress))["state"]
+            session_status = state["session_status"]
+            if session_status != "complete":
+                if state["pending_assessment"] is not None:
+                    action = "resume_pending"
+                elif session_status == "active":
+                    action = "resume_quiz"
+                else:
+                    action = "start_quiz"
+                result = {
+                    "next_action": action,
+                    "pass_number": number,
+                    "topic": topic["id"],
+                    "source": topic["source"],
+                    "notes": topic["notes"],
+                    "progress_file": str(progress),
+                }
+                if gaps is not None:
+                    result["gaps_file"] = str(gaps)
+                return result
 
-    missing = [entry for entry in topic_entries if not entry["progress"].is_file()]
-    if missing:
-        return {
-            "next_action": "setup_required" if number == 1 else "initialize_pass",
-            "pass_number": number,
-            "topics": [entry["id"] for entry in missing],
-        }
+            target = pass_path(root, topic["id"], number + 1) / "gaps.json"
+            if not target.is_file():
+                return {
+                    "next_action": "extract_gaps",
+                    "topic": topic["id"],
+                    "completed_pass": number,
+                    "target_pass": number + 1,
+                    "progress_file": str(progress),
+                    "gaps_file": str(target),
+                }
+            if load_json(target)["assessment_count"] == 0:
+                break
+            number += 1
 
-    for entry in topic_entries:
-        state = manager("show", "--file", str(entry["progress"]))["state"]
-        session_status = state["session_status"]
-        if session_status == "complete":
-            continue
-        if state["pending_assessment"] is not None:
-            action = "resume_pending"
-        elif session_status == "active":
-            action = "resume_quiz"
-        else:
-            action = "start_quiz"
-        result = {
-            "next_action": action,
-            "pass_number": number,
-            "topic": entry["id"],
-            "source": entry["source"],
-            "notes": entry["notes"],
-            "progress_file": str(entry["progress"]),
-        }
-        if entry["gaps"] is not None:
-            result["gaps_file"] = str(entry["gaps"])
-        return result
-
-    next_pass = pass_path(root, number + 1)
-    return {
-        "next_action": "extract_gaps",
-        "completed_pass": number,
-        "progress_directory": str(pass_directory / "progress"),
-        "gaps_directory": str(next_pass / "gaps"),
-    }
+    return {"next_action": "workflow_complete"}
 
 
 def initialize_pass(
     root: Path,
     number: int,
+    topic_id: str,
     assessment_emphasis: str | None,
     question_types: list[str] | None,
     response_format: str,
 ) -> dict[str, Any]:
     if number < 2:
         raise ValueError("Pass 1 must be initialized by test-prep-setup")
-    topic_entries, manifest = entries(root, number)
-    if manifest is None or manifest["assessment_count"] == 0:
-        raise ValueError(f"Pass {number} has no gap targets")
-    created: list[str] = []
-    for entry in topic_entries:
-        progress = entry["progress"]
-        if progress.exists():
-            manager("validate", "--file", str(progress))
-            continue
-        preference_arguments = ["--response-format", response_format]
-        if assessment_emphasis is not None:
-            preference_arguments.extend(
-                ("--assessment-emphasis", assessment_emphasis)
-            )
-        elif not question_types:
-            preference_arguments.extend(
-                ("--assessment-emphasis", DEFAULT_ASSESSMENT_EMPHASIS)
-            )
-        for question_type in question_types or []:
-            preference_arguments.extend(("--question-type", question_type))
-        manager(
-            "init",
-            "--file",
-            str(progress),
-            "--source",
-            entry["source"],
-            "--notes",
-            entry["notes"],
-            *preference_arguments,
-        )
-        created.append(str(progress))
-    return {"ok": True, "pass_number": number, "created": created}
+    plan = load_json(root / "test-plan.json")
+    topic = next((item for item in plan["topics"] if item["id"] == topic_id), None)
+    if topic is None:
+        raise ValueError(f"Unknown topic: {topic_id}")
+    directory = pass_path(root, topic_id, number)
+    gaps = directory / "gaps.json"
+    if not gaps.is_file() or load_json(gaps)["assessment_count"] == 0:
+        raise ValueError(f"Pass {number} has no gap targets for {topic_id}")
+    progress = directory / "progress.json"
+    if progress.exists():
+        manager("validate", "--file", str(progress))
+        return {"ok": True, "pass_number": number, "topic": topic_id, "created": []}
+    preference_arguments = ["--response-format", response_format]
+    if assessment_emphasis is not None:
+        preference_arguments.extend(("--assessment-emphasis", assessment_emphasis))
+    elif not question_types:
+        preference_arguments.extend(("--assessment-emphasis", DEFAULT_ASSESSMENT_EMPHASIS))
+    for question_type in question_types or []:
+        preference_arguments.extend(("--question-type", question_type))
+    manager(
+        "init", "--file", str(progress), "--source", topic["source"],
+        "--notes", topic["notes"], *preference_arguments,
+    )
+    return {"ok": True, "pass_number": number, "topic": topic_id, "created": [str(progress)]}
 
 
 def main() -> None:
@@ -237,6 +175,7 @@ def main() -> None:
         result = initialize_pass(
             args.root,
             args.pass_number,
+            args.topic,
             args.assessment_emphasis,
             args.question_type,
             args.response_format,

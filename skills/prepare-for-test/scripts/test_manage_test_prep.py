@@ -14,7 +14,7 @@ SCRIPT = Path(__file__).with_name("manage_test_prep.py")
 SKILLS = Path(__file__).parents[2]
 SETUP = SKILLS / "test-prep-setup/scripts/manage_test_plan.py"
 PROGRESS = SKILLS / "study-session-manager/scripts/manage_progress.py"
-EXTRACT = SKILLS / "gaps-extractor/scripts/extract_gap_directory.py"
+EXTRACT = SKILLS / "gaps-extractor/scripts/extract_gaps.py"
 
 
 class ManageTestPrepTests(unittest.TestCase):
@@ -54,8 +54,8 @@ class ManageTestPrepTests(unittest.TestCase):
             str(self.source_two),
             str(self.notes_two),
         )
-        self.progress = self.root / "progress/pass_01/progress/topic-01-progress.json"
-        self.progress_two = self.root / "progress/pass_01/progress/topic-02-progress.json"
+        self.progress = self.root / "progress/topic-01/pass_01/progress.json"
+        self.progress_two = self.root / "progress/topic-02/pass_01/progress.json"
 
     def tearDown(self) -> None:
         self.temporary_directory.cleanup()
@@ -99,6 +99,10 @@ class ManageTestPrepTests(unittest.TestCase):
         self.run_cli(PROGRESS, *arguments)
         self.run_cli(PROGRESS, "complete", "--file", str(progress))
 
+    def extract(self, progress: Path, gaps: Path) -> None:
+        gaps.parent.mkdir(parents=True, exist_ok=True)
+        self.run_cli(EXTRACT, str(progress), "--output", str(gaps))
+
     def test_status_resumes_and_advances_first_pass(self) -> None:
         self.assertEqual(
             self.run_cli(SCRIPT, "status", "--root", str(self.root))["next_action"],
@@ -136,6 +140,9 @@ class ManageTestPrepTests(unittest.TestCase):
         )
         self.run_cli(PROGRESS, "complete", "--file", str(self.progress))
         status = self.run_cli(SCRIPT, "status", "--root", str(self.root))
+        self.assertEqual(status["next_action"], "extract_gaps")
+        self.extract(self.progress, Path(status["gaps_file"]))
+        status = self.run_cli(SCRIPT, "status", "--root", str(self.root))
         self.assertEqual(status["next_action"], "start_quiz")
         self.assertEqual(status["topic"], "topic-02")
         self.answer_and_complete(self.progress_two, "correct")
@@ -146,23 +153,18 @@ class ManageTestPrepTests(unittest.TestCase):
 
     def test_zero_gap_extraction_completes_workflow(self) -> None:
         self.answer_and_complete(self.progress, "correct")
+        status = self.run_cli(SCRIPT, "status", "--root", str(self.root))
+        self.extract(self.progress, Path(status["gaps_file"]))
         self.answer_and_complete(self.progress_two, "correct")
-        self.run_cli(
-            EXTRACT,
-            str(self.root / "progress/pass_01/progress"),
-            str(self.root / "progress/pass_02/gaps"),
-        )
+        status = self.run_cli(SCRIPT, "status", "--root", str(self.root))
+        self.extract(self.progress_two, Path(status["gaps_file"]))
         status = self.run_cli(SCRIPT, "status", "--root", str(self.root))
         self.assertEqual(status["next_action"], "workflow_complete")
 
     def test_gaps_initialize_targeted_pass(self) -> None:
         self.answer_and_complete(self.progress, "incorrect", "Missing mechanism.")
-        self.answer_and_complete(self.progress_two, "correct")
-        self.run_cli(
-            EXTRACT,
-            str(self.root / "progress/pass_01/progress"),
-            str(self.root / "progress/pass_02/gaps"),
-        )
+        status = self.run_cli(SCRIPT, "status", "--root", str(self.root))
+        self.extract(self.progress, Path(status["gaps_file"]))
         status = self.run_cli(SCRIPT, "status", "--root", str(self.root))
         self.assertEqual(status["next_action"], "initialize_pass")
         self.run_cli(
@@ -172,6 +174,8 @@ class ManageTestPrepTests(unittest.TestCase):
             str(self.root),
             "--pass-number",
             "2",
+            "--topic",
+            "topic-01",
             "--question-type",
             "transfer",
             "--question-type",
@@ -181,8 +185,8 @@ class ManageTestPrepTests(unittest.TestCase):
         )
         status = self.run_cli(SCRIPT, "status", "--root", str(self.root))
         self.assertEqual(status["next_action"], "start_quiz")
-        self.assertTrue(status["gaps_file"].endswith("topic-01-gaps.json"))
-        progress = self.root / "progress/pass_02/progress/topic-01-progress.json"
+        self.assertTrue(status["gaps_file"].endswith("topic-01/pass_02/gaps.json"))
+        progress = self.root / "progress/topic-01/pass_02/progress.json"
         preferences = json.loads(progress.read_text())["session_preferences"]
         self.assertEqual(
             preferences["question_types"],
@@ -191,12 +195,8 @@ class ManageTestPrepTests(unittest.TestCase):
 
     def test_targeted_pass_uses_defaults(self) -> None:
         self.answer_and_complete(self.progress, "incorrect", "Missing mechanism.")
-        self.answer_and_complete(self.progress_two, "correct")
-        self.run_cli(
-            EXTRACT,
-            str(self.root / "progress/pass_01/progress"),
-            str(self.root / "progress/pass_02/gaps"),
-        )
+        status = self.run_cli(SCRIPT, "status", "--root", str(self.root))
+        self.extract(self.progress, Path(status["gaps_file"]))
         self.run_cli(
             SCRIPT,
             "init-pass",
@@ -204,8 +204,10 @@ class ManageTestPrepTests(unittest.TestCase):
             str(self.root),
             "--pass-number",
             "2",
+            "--topic",
+            "topic-01",
         )
-        progress = self.root / "progress/pass_02/progress/topic-01-progress.json"
+        progress = self.root / "progress/topic-01/pass_02/progress.json"
         preferences = json.loads(progress.read_text())["session_preferences"]
         self.assertEqual(preferences["assessment_emphasis"], "balanced mix")
         self.assertEqual(preferences["response_format"], "short answer")

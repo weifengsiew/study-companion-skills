@@ -123,9 +123,8 @@ def check_access(plan: dict[str, Any], root: Path) -> list[str]:
             (Path(topic[key]), f"{topic['id']} {key}") for key in ("source", "notes")
         )
     errors.extend(error for path, label in paths if (error := readable(path, label)))
-    progress_directory = root / "progress" / "pass_01" / "progress"
     for topic in plan["topics"]:
-        progress = progress_directory / f"{topic['id']}-progress.json"
+        progress = root / "progress" / topic["id"] / "pass_01" / "progress.json"
         result = subprocess.run(
             [sys.executable, str(PROGRESS_MANAGER), "validate", "--file", str(progress)],
             text=True,
@@ -181,7 +180,7 @@ def main() -> None:
         return
 
     canonical_topics = args.root / "test-topics.md"
-    initial_progress = args.root / "progress" / "pass_01" / "progress"
+    initial_progress = args.root / "progress"
     same_topics_file = args.topics_file.resolve() == canonical_topics.resolve()
     if path.exists() or initial_progress.exists() or (
         canonical_topics.exists() and not same_topics_file
@@ -214,9 +213,8 @@ def main() -> None:
         write_atomic(canonical_topics, topics_text)
     rendered = json.dumps(plan, indent=2, ensure_ascii=False) + "\n"
     write_atomic(path, rendered)
-    initial_progress.mkdir(parents=True, exist_ok=False)
     for topic in plan["topics"]:
-        progress = initial_progress / f"{topic['id']}-progress.json"
+        progress = initial_progress / topic["id"] / "pass_01" / "progress.json"
         preference_arguments = ["--response-format", args.response_format]
         if args.assessment_emphasis is not None:
             preference_arguments.extend(
